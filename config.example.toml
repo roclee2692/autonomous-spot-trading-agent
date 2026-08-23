@@ -1,0 +1,28 @@
+[agent]
+environment = "simulation" # simulation | testnet | live
+stage = 0                    # 0 simulation, 1 live smoke, 2 $100 experiment
+symbol = "BTCUSDT"
+
+[capital]
+maximum_account_value_usdt = "100"
+quote_reserve_usdt = "20"
+core_btc_value_usdt = "20"
+order_budget_usdt = "10"
+
+[risk]
+max_open_orders = 6
+max_daily_turnover_usdt = "60"
+max_daily_loss_usdt = "5"
+max_data_age_seconds = 60
+maximum_fee_rate = "0.0015"
+
+[strategy]
+levels_per_side = 3
+assumed_slippage = "0.0002"
+cycle_minutes = 240
+
+[storage]
+database_path = "state/agent.sqlite3"
+journal_path = "state/journal.jsonl"
+activation_path = "state/live-activation.json"
+

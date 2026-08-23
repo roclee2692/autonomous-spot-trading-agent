@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "immutable_without_human_approval": true,
+  "default_action": "NO_TRADE",
+  "allowed_market": "SPOT",
+  "allowed_symbols": ["BTCUSDT"],
+  "forbidden_products": ["MARGIN", "FUTURES", "OPTIONS", "LEVERAGE", "WITHDRAWAL"],
+  "principles": [
+    "SURVIVAL_BEFORE_RETURN",
+    "CAPITAL_SAFETY_BEFORE_PROFIT",
+    "CASH_IS_A_VALID_POSITION",
+    "NO_RECOVERY_RISK_ESCALATION",
+    "NO_STRATEGY_DRIFT",
+    "RECORD_ORIGINAL_THESIS",
+    "RISK_LIMITS_ARE_EXTERNAL_AND_DETERMINISTIC",
+    "NO_TRADE_WHEN_UNCERTAIN",
+    "NET_PROFIT_AFTER_COSTS_ONLY"
+  ],
+  "live_trading_enabled": false
+}
+
