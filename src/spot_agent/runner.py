@@ -188,7 +188,7 @@ def _run_cycle_locked(
             state.record_cycle(config.environment, analyzed.decision.regime.value, analyzed.decision.confidence, action, payload)
             return {"action": action, **payload}
 
-        if analyzed.decision.regime is not Regime.RANGE:
+        if analyzed.decision.regime is not Regime.RANGE and not config.allow_trend_grid:
             canceled: list[str] = []
             if execute:
                 for order in open_orders:

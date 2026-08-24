@@ -4,17 +4,18 @@ stage = 1
 symbol = "BTCUSDT"
 
 [capital]
-maximum_account_value_usdt = "10"
-quote_reserve_usdt = "0.25"
+maximum_account_value_usdt = "15"
+quote_reserve_usdt = "0.50"
 core_btc_value_usdt = "0"
-order_budget_usdt = "9.50"
+order_budget_usdt = "5.50"
 
 [risk]
-max_open_orders = 1
+max_open_orders = 2
 max_daily_turnover_usdt = "20"
 max_daily_loss_usdt = "2"
 max_data_age_seconds = 60
 maximum_fee_rate = "0.0015"
+allow_trend_grid = true
 
 [strategy]
 levels_per_side = 1

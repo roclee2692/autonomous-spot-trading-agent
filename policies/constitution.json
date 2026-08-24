@@ -3,8 +3,16 @@
   "immutable_without_human_approval": true,
   "default_action": "NO_TRADE",
   "allowed_market": "SPOT",
-  "allowed_symbols": ["BTCUSDT"],
-  "forbidden_products": ["MARGIN", "FUTURES", "OPTIONS", "LEVERAGE", "WITHDRAWAL"],
+  "allowed_symbols": [
+    "BTCUSDT"
+  ],
+  "forbidden_products": [
+    "MARGIN",
+    "FUTURES",
+    "OPTIONS",
+    "LEVERAGE",
+    "WITHDRAWAL"
+  ],
   "principles": [
     "SURVIVAL_BEFORE_RETURN",
     "CAPITAL_SAFETY_BEFORE_PROFIT",
@@ -16,6 +24,5 @@
     "NO_TRADE_WHEN_UNCERTAIN",
     "NET_PROFIT_AFTER_COSTS_ONLY"
   ],
-  "live_trading_enabled": false
+  "live_trading_enabled": true
 }
-

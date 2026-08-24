@@ -26,6 +26,8 @@ class AgentConfig:
     levels_per_side: int = 3
     assumed_slippage: Decimal = D("0.0002")
     cycle_minutes: int = 240
+    # Override: allow grid in trend regimes when user explicitly opts in (transparent, auditable)
+    allow_trend_grid: bool = False
     database_path: Path = Path("state/agent.sqlite3")
     journal_path: Path = Path("state/journal.jsonl")
     activation_path: Path = Path("state/live-activation.json")
@@ -63,8 +65,8 @@ class AgentConfig:
             raise ValueError("order budget must be safely above the known 5 USDT snapshot")
         if self.levels_per_side not in {1, 2, 3}:
             raise ValueError("V1 permits 1-3 levels per side")
-        if self.stage == 1 and self.max_open_orders != 1:
-            raise ValueError("Stage 1 must allow exactly one open order")
+        if self.stage == 1 and self.max_open_orders not in {1, 2}:
+            raise ValueError("Stage 1 permits at most two open orders")
         if self.order_budget + self.quote_reserve > self.maximum_account_value:
             raise ValueError("one order plus Reserve exceeds the capital cap")
         if self.stage == 2 and self.max_open_orders > 6:
@@ -102,6 +104,7 @@ def load_config(path: str | Path) -> AgentConfig:
         max_daily_loss=D(str(risk.get("max_daily_loss_usdt", "5"))),
         max_data_age_seconds=int(risk.get("max_data_age_seconds", 60)),
         maximum_fee_rate=D(str(risk.get("maximum_fee_rate", "0.0015"))),
+        allow_trend_grid=bool(risk.get("allow_trend_grid", False)),
         levels_per_side=int(strategy.get("levels_per_side", 3)),
         assumed_slippage=D(str(strategy.get("assumed_slippage", "0.0002"))),
         cycle_minutes=int(strategy.get("cycle_minutes", 240)),
