@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sqlite3
 from datetime import datetime, timezone
@@ -205,6 +206,82 @@ class StateStore:
             "SELECT * FROM orders WHERE exchange_order_id=?", (str(exchange_order_id),)
         ).fetchone()
         return dict(row) if row else None
+
+    def adopt_remote_order(self, response: dict[str, Any]) -> str:
+        """Adopt an agent-prefixed order found on the exchange that the local
+        ledger has no record of (e.g. an ``elysia-`` order placed manually).
+
+        Writes a minimal immutable adoption thesis plus the order row so that
+        reconciliation can keep its status and fills tracked going forward.
+        Idempotent: if the order already exists it is just refreshed.
+        """
+        client_id = response.get("clientOrderId") or response.get("origClientOrderId")
+        if not client_id:
+            raise ValueError("remote order has no clientOrderId")
+        if self.order(client_id) is not None:
+            self.update_order(response)
+            return client_id
+        token = hashlib.sha256(client_id.encode("utf-8")).hexdigest()[:8]
+        thesis_id = f"adopted-{token}"
+        if response.get("time"):
+            created = datetime.fromtimestamp(
+                int(response["time"]) / 1000, tz=timezone.utc
+            ).isoformat()
+        else:
+            created = _now()
+        thesis_payload = {
+            "adopted_from_exchange": True,
+            "client_order_id": client_id,
+            "symbol": response.get("symbol"),
+            "side": response.get("side"),
+            "reason": "remote agent-prefixed order adopted during reconciliation",
+        }
+        with self.connection:
+            self.connection.execute(
+                "INSERT OR IGNORE INTO theses(thesis_id, created_at, payload_json) VALUES (?, ?, ?)",
+                (
+                    thesis_id,
+                    created,
+                    json.dumps(
+                        thesis_payload,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        separators=(",", ":"),
+                        default=_json_default,
+                    ),
+                ),
+            )
+            self.connection.execute(
+                """
+                INSERT OR IGNORE INTO orders(
+                    client_order_id, exchange_order_id, symbol, side, order_type, price, orig_qty,
+                    executed_qty, cumulative_quote_qty, status, thesis_id, parent_client_order_id,
+                    pair_created, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 0, ?, ?)
+                """,
+                (
+                    client_id,
+                    str(response["orderId"]) if response.get("orderId") is not None else None,
+                    response.get("symbol") or "UNKNOWN",
+                    response.get("side") or "UNKNOWN",
+                    response.get("type") or "UNKNOWN",
+                    str(response.get("price", "0")),
+                    str(response.get("origQty", "0")),
+                    str(response.get("executedQty", "0")),
+                    str(
+                        response.get(
+                            "cummulativeQuoteQty", response.get("cumulativeQuoteQty", "0")
+                        )
+                    ),
+                    str(response.get("status", "UNKNOWN")),
+                    thesis_id,
+                    created,
+                    _now(),
+                ),
+            )
+        if self.order(client_id) is None:
+            raise ValueError(f"failed to persist adopted order {client_id!r}")
+        return client_id
 
     def update_order(self, response: dict[str, Any]) -> None:
         client_id = response.get("clientOrderId") or response.get("origClientOrderId")

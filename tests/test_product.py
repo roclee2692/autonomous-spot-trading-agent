@@ -282,6 +282,84 @@ class ProductSafetyTests(unittest.TestCase):
                 with self.assertRaises(ReconciliationError):
                     engine.reconcile()
 
+    def test_reconciliation_adopts_elysia_remote_order(self) -> None:
+        remote = {
+            "clientOrderId": "elysia-sell-test01",
+            "orderId": 7000000001,
+            "symbol": "BTCUSDT",
+            "side": "SELL",
+            "type": "LIMIT_MAKER",
+            "price": "83400.00",
+            "origQty": "0.00006000",
+            "executedQty": "0.00000000",
+            "status": "NEW",
+            "time": 1787880000000,
+        }
+
+        class RemoteClient:
+            def open_orders(self, _symbol):
+                return [remote]
+
+            def trades(self, _symbol):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            with StateStore(Path(directory) / "state.sqlite3") as state:
+                engine = ExecutionEngine(
+                    RemoteClient(), state, HashChainJournal(Path(directory) / "journal.jsonl")
+                )
+                result = engine.reconcile()
+                self.assertEqual(result["adopted"], 1)
+                self.assertEqual(result["remote_agent_open"], 1)
+                order = state.order("elysia-sell-test01")
+                self.assertIsNotNone(order)
+                self.assertEqual(order["status"], "NEW")
+                self.assertEqual(order["side"], "SELL")
+                self.assertTrue(order["thesis_id"].startswith("adopted-"))
+                # second reconcile is idempotent — no new adoption
+                result2 = engine.reconcile()
+                self.assertEqual(result2["adopted"], 0)
+
+    def test_reconciliation_can_cancel_adopted_elysia_order(self) -> None:
+        remote = {
+            "clientOrderId": "elysia-sell-cancelme",
+            "orderId": 7000000002,
+            "symbol": "BTCUSDT",
+            "side": "SELL",
+            "type": "LIMIT_MAKER",
+            "price": "83400.00",
+            "origQty": "0.00006000",
+            "executedQty": "0.00000000",
+            "status": "NEW",
+            "time": 1787880000000,
+        }
+
+        class RemoteClient:
+            def __init__(self):
+                self.open = [remote]
+                self.canceled = None
+
+            def open_orders(self, _symbol):
+                return self.open
+
+            def cancel_order(self, _symbol, client_id):
+                self.canceled = client_id
+                self.open = []
+                return {**remote, "status": "CANCELED"}
+
+            def trades(self, _symbol):
+                return []
+
+        with tempfile.TemporaryDirectory() as directory:
+            with StateStore(Path(directory) / "state.sqlite3") as state:
+                engine = ExecutionEngine(
+                    RemoteClient(), state, HashChainJournal(Path(directory) / "journal.jsonl")
+                )
+                engine.reconcile()
+                self.assertIsNotNone(state.order("elysia-sell-cancelme"))
+                engine.cancel("elysia-sell-cancelme")
+                self.assertEqual(state.order("elysia-sell-cancelme")["status"], "CANCELED")
+
     def test_market_analysis_uses_only_closed_candles(self) -> None:
         now_ms = int(time.time() * 1000)
         day_ms = 86_400_000

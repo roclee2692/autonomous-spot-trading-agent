@@ -8,7 +8,17 @@ from .journal import HashChainJournal
 from .models import TradeProposal
 from .state import StateStore
 
-AGENT_ORDER_PREFIX = "asv1-"
+AGENT_ORDER_PREFIXES = ("asv1-", "elysia-")
+
+
+def is_agent_order(client_order_id: str | None) -> bool:
+    """True for any order the system is responsible for tracking/managing.
+
+    `asv1-` are orders this agent submitted itself; `elysia-` are orders
+    placed manually (by Elysia or the user) that reconciliation should adopt
+    into the local ledger so their status and fills stay tracked.
+    """
+    return bool(client_order_id) and str(client_order_id).startswith(AGENT_ORDER_PREFIXES)
 
 
 class ReconciliationError(RuntimeError):
@@ -22,8 +32,8 @@ class ExecutionEngine:
         self.journal = journal
 
     def submit(self, proposal: TradeProposal, parent_client_order_id: str | None = None) -> dict[str, Any] | None:
-        if not proposal.client_order_id.startswith(AGENT_ORDER_PREFIX):
-            raise ValueError("agent orders must use the asv1- prefix")
+        if not is_agent_order(proposal.client_order_id):
+            raise ValueError("agent orders must use an owned prefix (asv1-/elysia-)")
         self.state.record_proposal(proposal, parent_client_order_id)
         self.journal.append("ORDER_SUBMIT_INTENT", asdict(proposal))
         params = {
@@ -56,7 +66,7 @@ class ExecutionEngine:
 
     def cancel(self, client_order_id: str, symbol: str = "BTCUSDT") -> dict[str, Any] | None:
         local = self.state.order(client_order_id)
-        if not client_order_id.startswith(AGENT_ORDER_PREFIX) or local is None:
+        if not is_agent_order(client_order_id) or local is None:
             raise ValueError("refusing to cancel an unowned order")
         self.state.set_order_status(client_order_id, "PENDING_CANCEL")
         try:
@@ -79,7 +89,7 @@ class ExecutionEngine:
         """Query an ambiguous submission and require a human decision before releasing it."""
         local = self.state.order(client_order_id)
         if (
-            not client_order_id.startswith(AGENT_ORDER_PREFIX)
+            not is_agent_order(client_order_id)
             or local is None
             or local["status"] not in {"PENDING_SUBMIT", "UNKNOWN"}
         ):
@@ -110,14 +120,19 @@ class ExecutionEngine:
         remote_agent = {
             item["clientOrderId"]: item
             for item in remote_open
-            if str(item.get("clientOrderId", "")).startswith(AGENT_ORDER_PREFIX)
+            if is_agent_order(str(item.get("clientOrderId", "")))
         }
         known = self.state.known_order_ids()
-        unknown_remote = set(remote_agent) - known
-        if unknown_remote:
+        missing_theses = sorted(set(remote_agent) - known)
+        if missing_theses and any(not cid.startswith("elysia-") for cid in missing_theses):
             raise ReconciliationError(
-                f"remote agent-prefixed orders lack immutable local theses: {sorted(unknown_remote)}"
+                f"remote agent-prefixed orders lack immutable local theses: {missing_theses}"
             )
+        adopted: list[str] = []
+        for client_id in missing_theses:
+            self.state.adopt_remote_order(remote_agent[client_id])
+            adopted.append(client_id)
+            self.journal.append("REMOTE_ORDER_ADOPTED", remote_agent[client_id])
         for response in remote_agent.values():
             self.state.update_order(response)
 
@@ -140,4 +155,9 @@ class ExecutionEngine:
             if self.state.record_trade(symbol, trade):
                 new_fills += 1
                 self.journal.append("TRADE_RECONCILED", trade)
-        return {"remote_agent_open": len(remote_agent), "queried": queried, "new_fills": new_fills}
+        return {
+            "remote_agent_open": len(remote_agent),
+            "adopted": len(adopted),
+            "queried": queried,
+            "new_fills": new_fills,
+        }
