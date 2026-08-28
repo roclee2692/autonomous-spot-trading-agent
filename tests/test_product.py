@@ -360,6 +360,33 @@ class ProductSafetyTests(unittest.TestCase):
                 engine.cancel("elysia-sell-cancelme")
                 self.assertEqual(state.order("elysia-sell-cancelme")["status"], "CANCELED")
 
+    def test_update_order_matches_by_exchange_id_when_client_id_unknown(self) -> None:
+        # Binance's cancel response returns an auto-generated clientOrderId;
+        # update_order must fall back to matching by exchange orderId.
+        order = self.plan.orders[0]
+        with tempfile.TemporaryDirectory() as directory:
+            with StateStore(Path(directory) / "state.sqlite3") as state:
+                state.record_proposal(order)
+                state.update_order(
+                    {
+                        "orderId": 111,
+                        "clientOrderId": order.client_order_id,
+                        "status": "NEW",
+                        "executedQty": "0",
+                        "symbol": "BTCUSDT",
+                    }
+                )
+                state.update_order(
+                    {
+                        "orderId": 111,
+                        "clientOrderId": "q12XNEO30MZVYQ0lz8QfTn",
+                        "status": "CANCELED",
+                        "executedQty": "0",
+                        "symbol": "BTCUSDT",
+                    }
+                )
+                self.assertEqual(state.order(order.client_order_id)["status"], "CANCELED")
+
     def test_market_analysis_uses_only_closed_candles(self) -> None:
         now_ms = int(time.time() * 1000)
         day_ms = 86_400_000

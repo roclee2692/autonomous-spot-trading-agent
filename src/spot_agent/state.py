@@ -285,6 +285,13 @@ class StateStore:
 
     def update_order(self, response: dict[str, Any]) -> None:
         client_id = response.get("clientOrderId") or response.get("origClientOrderId")
+        local = self.order(client_id) if client_id else None
+        if local is None and response.get("orderId") is not None:
+            # Binance's cancel response returns an auto-generated clientOrderId;
+            # match by exchange order id instead when the client id is unknown.
+            local = self.order_by_exchange_id(str(response["orderId"]))
+            if local is not None:
+                client_id = local["client_order_id"]
         if not client_id or self.order(client_id) is None:
             raise ValueError(f"refusing to adopt unknown order {client_id!r}")
         existing = self.order(client_id)
