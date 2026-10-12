@@ -101,6 +101,7 @@ class Lot:
     t0: int              # creation bar index
     peak: float = 0.0    # for trailing exits
     armed: bool = False
+    exit_next: bool = False  # regime exit decided at a daily close, executed next bar open
 
 
 @dataclass
@@ -151,6 +152,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
     gen_d = p.gen_d or p.d
     halt_days = (ctx or {}).get("halt_days", ())
     pause_days = (ctx or {}).get("pause_days", ())
+    bear_days = (ctx or {}).get("bear_days", ())   # tail regime filter (decided at close)
 
     eq_days, eq_vals, pos_vals, pos_costs, cyc_pnl, cyc_cost_log = [], [], [], [], [], []
     pend_log = []
@@ -187,6 +189,19 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
         oi, hi, li, ci = o[i], h[i], l[i], c[i]
         day = int(bars.t[i] // DAY_MS)
         halted = day in halt_days or day in pause_days
+        # ---- 0. tail lots flagged by a regime exit at the previous close sell at this open
+        if s.tail and any(t.exit_next for t in s.tail):
+            keep = []
+            for lot in s.tail:
+                if lot.exit_next:
+                    s.cash += lot.qty * oi * (1 - fee)
+                    fees_paid += lot.qty * oi * fee
+                    tail_realized += lot.qty * oi * (1 - fee) - lot.cost
+                    n_sells += 1
+                    events.append((i, "tail_regime_exit", oi))
+                else:
+                    keep.append(lot)
+            s.tail = keep
         # ---- 1. active-cycle buys, highest price first
         bought = False
         if s.buys and li <= max(b[0] for b in s.buys) * (1 - pen):
@@ -333,13 +348,16 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                     waiting = "halt"
             if s.tail and p.tail_exit[0] != "none":
                 keep = []
+                bear = day in bear_days
                 for lot in s.tail:
-                    if _tail_should_sell(lot, ci, i, bars, p.tail_exit):
+                    act = _tail_decision(lot, ci, i, bars, p.tail_exit, bear)
+                    if act == 1:
                         s.cash += lot.qty * ci * (1 - fee)
                         fees_paid += lot.qty * ci * fee
                         tail_realized += lot.qty * ci * (1 - fee) - lot.cost
                         n_sells += 1
                     else:
+                        lot.exit_next = act == 2
                         keep.append(lot)
                 s.tail = keep
             if (p.drift is not None and not s.locked and s.cyc_qty == 0 and not halted
@@ -391,6 +409,24 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
         "tail_qty": sum(t.qty for t in s.tail), "tail_cost": sum(t.cost for t in s.tail),
         "tail_realized": tail_realized,
     }
+
+
+def _tail_decision(lot: Lot, price: float, i: int, bars: Bars, rule: tuple, bear: bool) -> int:
+    """0 keep, 1 sell now at this close, 2 sell at the next bar's open.
+    Regime kinds use `bear`, a price-only signal known at this close:
+      ("regime",)                      hold in bull, exit when bear
+      ("regime_above_cost",)           exit when bear only if price >= lot cost
+      ("target_or_regime", x)          close >= C*(1+x) -> sell now; else bear -> exit
+      ("target_or_regime_above_cost", x)"""
+    kind = rule[0]
+    if kind in ("regime", "regime_above_cost", "target_or_regime", "target_or_regime_above_cost"):
+        C = lot.cost / lot.qty if lot.qty else 0.0
+        if kind.startswith("target") and price >= C * (1 + rule[1]):
+            return 1
+        if bear and (not kind.endswith("above_cost") or price >= C):
+            return 2
+        return 0
+    return 1 if _tail_should_sell(lot, price, i, bars, rule) else 0
 
 
 def _tail_should_sell(lot: Lot, price: float, i: int, bars: Bars, rule: tuple) -> bool:

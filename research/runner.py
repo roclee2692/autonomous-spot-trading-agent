@@ -277,3 +277,75 @@ def run_strategy(bars: E.Bars, spec: tuple) -> dict:  # noqa: F811
     if spec[0] == "core_halt":
         return _run_halt(bars, spec[1], spec[2], spec[3] if len(spec) > 3 else "halt")
     return _orig_run_strategy(bars, spec)
+
+
+# --------------------------------------------------------------------------
+# bull/bear regime signals for the tail exit (price-only, known at that close)
+# --------------------------------------------------------------------------
+def _coin_close(sym: str) -> pd.Series:
+    piv = universe_panel()
+    if sym in piv["close"].columns:
+        return piv["close"][sym].dropna()
+    f = lab.coin_frame(sym, "1d")
+    return pd.Series(f["close"].values, index=(f["open_time_ms"] // E.DAY_MS).astype(int).values)
+
+
+def _hyst(x: pd.Series, ma: pd.Series, down: float, up: float) -> pd.Series:
+    """Bear state machine: enter when x < ma*(1-down), leave when x > ma*(1+up)."""
+    out, bear = [], False
+    for v, m in zip(x.values, ma.values):
+        if np.isnan(m):
+            out.append(False)
+            continue
+        if not bear and v < m * (1 - down):
+            bear = True
+        elif bear and v > m * (1 + up):
+            bear = False
+        out.append(bear)
+    return pd.Series(out, index=x.index)
+
+
+@lru_cache(maxsize=None)
+def _btc_bear(rule: str) -> frozenset:
+    b = btc_close()
+    if rule.startswith("btc_ma") and rule[6:].isdigit():
+        n = int(rule[6:])
+        sig = b < b.rolling(n).mean()
+    elif rule == "btc_ma200_h5":
+        sig = _hyst(b, b.rolling(200).mean(), 0.05, 0.05)
+    elif rule == "btc_mom365":
+        sig = b < b.shift(365)
+    elif rule == "btc_dd30":
+        sig = b < b.rolling(365, min_periods=100).max() * 0.70
+    elif rule == "btc_cross":
+        sig = b.rolling(50).mean() < b.rolling(200).mean()
+    else:
+        raise ValueError(rule)
+    return frozenset(int(d) for d in sig[sig.fillna(False).astype(bool)].index)
+
+
+@lru_cache(maxsize=4096)
+def bear_days(sym: str, rule: str) -> frozenset:
+    if rule.startswith("btc_"):
+        return _btc_bear(rule)
+    c = _coin_close(sym)
+    if rule == "coin_ma200":
+        sig = c < c.rolling(200).mean()
+    elif rule == "coin_mom365":
+        sig = c < c.shift(365)
+    elif rule == "both_ma200":
+        btc = btc_close().reindex(c.index).ffill()
+        btc_ma = btc_close().rolling(200).mean().reindex(c.index).ffill()
+        sig = (c < c.rolling(200).mean()) & (btc < btc_ma)
+    else:
+        raise ValueError(rule)
+    return frozenset(int(d) for d in sig[sig.fillna(False).astype(bool)].index)
+
+
+_prev_run_strategy = run_strategy
+
+
+def run_strategy(bars: E.Bars, spec: tuple) -> dict:  # noqa: F811
+    if spec[0] == "core_regime":
+        return E.run_core(bars, spec[1], {"bear_days": bear_days(bars.name, spec[2])})
+    return _prev_run_strategy(bars, spec)
