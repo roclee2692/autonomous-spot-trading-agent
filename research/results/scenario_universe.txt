@@ -1,0 +1,6 @@
+              share  ret_med  ret_p10  worst_med  bh_med  maxcost_med
+scen                                                                 
+gen1 only     0.111    0.157   -0.008     -0.024   0.455        0.384
+reached gen2  0.453    0.228   -0.107     -0.129   0.004        0.804
+reached gen3  0.436   -0.168   -0.621     -0.393  -0.616        1.080
+coin -80% or worse in the year: share 0.077  V3 median -0.632  p10 -0.835

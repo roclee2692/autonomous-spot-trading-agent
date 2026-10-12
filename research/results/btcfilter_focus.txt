@@ -1,0 +1,36 @@
+== focus ALL H=365
+           variant    n  ret_med  logret    p10  maxdd_med   util  cycles_py
+0               V3  388    0.251   0.208 -0.220      0.310  0.394      5.613
+1  V3+btc-35%_halt  388    0.221   0.192 -0.230      0.295  0.351      5.160
+2   V3+btc200_halt  388    0.206   0.203 -0.164      0.268  0.332      5.027
+3  V3+btc200_pause  388    0.142   0.140 -0.211      0.232  0.282      4.425
+4               bh  388   -0.073  -0.054 -0.671      0.691  1.000      0.000
+ERR TAO V3 index 0 is out of bounds for axis 0 with size 0
+ERR TAO V3+btc200_pause index 0 is out of bounds for axis 0 with size 0
+ERR TAO V3+btc-35%_halt index 0 is out of bounds for axis 0 with size 0
+ERR TAO bh index 0 is out of bounds for axis 0 with size 0
+ERR TAO V3+btc200_halt index 0 is out of bounds for axis 0 with size 0
+ERR HYPE V3 index 0 is out of bounds for axis 0 with size 0
+ERR HYPE V3+btc200_halt index 0 is out of bounds for axis 0 with size 0
+ERR HYPE V3+btc200_pause index 0 is out of bounds for axis 0 with size 0
+ERR HYPE V3+btc-35%_halt index 0 is out of bounds for axis 0 with size 0
+ERR HYPE bh index 0 is out of bounds for axis 0 with size 0
+ERR ZRO V3 index 0 is out of bounds for axis 0 with size 0
+ERR ZRO V3+btc200_halt index 0 is out of bounds for axis 0 with size 0
+ERR ZRO V3+btc200_pause index 0 is out of bounds for axis 0 with size 0
+ERR ZRO V3+btc-35%_halt index 0 is out of bounds for axis 0 with size 0
+ERR ZRO bh index 0 is out of bounds for axis 0 with size 0
+== focus IS H=365
+           variant    n  ret_med  logret    p10  maxdd_med   util  cycles_py
+0               V3  145    0.398   0.163 -0.453      0.319  0.454      6.400
+1  V3+btc-35%_halt  145    0.179   0.097 -0.356      0.252  0.306      5.068
+2   V3+btc200_halt  145    0.268   0.194 -0.291      0.245  0.305      5.617
+3  V3+btc200_pause  145    0.197   0.162 -0.246      0.163  0.240      4.850
+4               bh  145    0.271  -0.070 -0.795      0.694  1.000      0.000
+== focus OOS H=365
+           variant    n  ret_med  logret    p10  maxdd_med   util  cycles_py
+0               V3  178    0.179   0.141 -0.185      0.343  0.408      4.572
+1  V3+btc-35%_halt  178    0.170   0.139 -0.185      0.332  0.398      4.402
+2   V3+btc200_halt  178    0.162   0.125 -0.172      0.305  0.364      4.027
+3  V3+btc200_pause  178    0.078   0.055 -0.216      0.271  0.302      3.442
+4               bh  178   -0.221  -0.313 -0.641      0.698  1.000      0.000
