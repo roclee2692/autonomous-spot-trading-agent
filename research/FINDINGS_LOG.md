@@ -89,3 +89,10 @@ OOS 540: V3 -0.231, V2 -0.569, B&H -0.934. 2 gens beat 3 on generic alts over 3y
 3 gens beat 2 on the user's coins incl. satellites (sat+UNI 1095: 0.516 vs 0.350).
 BTC200 halt on focus: ALL 0.203 vs 0.208, IS 0.194 vs 0.163, OOS 0.125 vs 0.141 -> not adopted.
 Scenario (user coins, 365d, V3): gen1-only 7% (+33%), gen2 59% (+38%, p10 -4%), gen3 33% (-10%, p10 -48%).
+
+## Tail regime exit (user follow-up: hold tail in bull, sell in bear)
+Lookahead-free (independent audit). User's literal rule with BTC MA200: focus H540 -0.030 vs V3 (CI -0.052..-0.006),
+H1095 -0.044; universe +0.032/+0.083 but ~0 without 2019-20 starts. R form not a plateau (MA150 vs MA200 3y diff 0.13-0.16);
+R:btc_ma150 universe edge 79% from the single 2021-05-16 exit. Fast signals MA20/50/100 all ~ +0.03-0.04 on focus -> effect is
+tail shortening; OOS 'no tail' ~ same gain (+0.058/+0.076 vs best +0.065/+0.083). Selection-adjusted (26 variants) RC/SPA
+p 0.15-0.22 focus H540. Not adopted; record BTC vs MA100/MA200 at tail creation/sale for the 6-month review.
