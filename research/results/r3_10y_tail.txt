@@ -1,0 +1,80 @@
+=== external H3650: mean log(1+ret) per series (median maxDD)
+strat            10%@3x  10%@4x  10%@5x  15%@4x  V3.1    bh  no tail
+sym                                                                 
+bitfinex_BTCUSD    2.25    2.47    2.59    2.75  2.33  5.26     1.70
+bitfinex_ETCUSD    2.59    2.80    2.88    2.82  2.34  1.41     2.53
+bitfinex_ETHUSD    2.85    3.09    3.22    3.33  3.04  5.08     2.40
+bitfinex_LTCUSD    3.03    3.24    3.43    3.43  2.98  2.96     2.59
+bitstamp_BTCUSD    2.50    2.76    2.95    3.09  2.54  6.31     1.86
+coinbase_BTCUSD    2.11    2.32    2.42    2.61  2.19  5.35     1.58
+coinbase_ETHUSD    3.05    3.27    3.30    3.53  3.19  5.08     2.55
+coinbase_LTCUSD    2.52    2.70    2.82    2.84  2.54  2.41     2.20
+strat            10%@3x  10%@4x  10%@5x  15%@4x  V3.1    bh  no tail
+sym                                                                 
+bitfinex_BTCUSD    0.44    0.46    0.47    0.47  0.45  0.83     0.43
+bitfinex_ETCUSD    0.71    0.70    0.70    0.74  0.70  0.95     0.64
+bitfinex_ETHUSD    0.61    0.61    0.62    0.63  0.63  0.94     0.57
+bitfinex_LTCUSD    0.62    0.62    0.62    0.63  0.64  0.93     0.60
+bitstamp_BTCUSD    0.45    0.46    0.46    0.47  0.46  0.83     0.44
+coinbase_BTCUSD    0.48    0.48    0.48    0.49  0.48  0.84     0.48
+coinbase_ETHUSD    0.75    0.76    0.77    0.76  0.63  0.94     0.76
+coinbase_LTCUSD    0.61    0.61    0.61    0.62  0.63  0.94     0.59
+=== external H1825: mean log(1+ret) per series (median maxDD)
+strat            10%@3x  10%@4x  10%@5x  15%@4x  V3.1    bh  no tail
+sym                                                                 
+bitfinex_BTCUSD    1.03    1.12    1.18    1.25  1.06  2.55     0.78
+bitfinex_DSHUSD    0.60    0.63    0.57    0.60  0.37 -1.41     0.62
+bitfinex_EOSUSD   -0.71   -0.75   -0.73   -0.73 -0.64 -1.93    -0.82
+bitfinex_ETCUSD    1.54    1.64    1.67    1.67  1.40  0.94     1.47
+bitfinex_ETHUSD    1.41    1.50    1.56    1.62  1.50  2.51     1.16
+bitfinex_IOTUSD    0.48    0.54    0.56    0.49  0.32 -1.17     0.59
+bitfinex_LTCUSD    1.45    1.54    1.61    1.63  1.44  1.44     1.24
+bitfinex_XMRUSD    0.97    0.99    0.99    1.03  1.01  0.82     0.85
+bitfinex_XRPUSD    1.30    1.26    1.30    1.29  1.24  0.78     1.13
+bitfinex_ZECUSD    1.09    1.08    1.05    1.05  0.95 -0.36     1.10
+bitstamp_BTCUSD    1.16    1.26    1.35    1.41  1.19  3.09     0.87
+bitstamp_XRPUSD    1.25    1.23    1.26    1.29  1.22  1.14     1.04
+coinbase_BTCUSD    0.94    1.02    1.07    1.13  0.97  2.39     0.73
+coinbase_ETHUSD    1.40    1.48    1.51    1.61  1.48  2.54     1.15
+coinbase_LTCUSD    1.03    1.08    1.10    1.11  1.03  0.58     0.95
+strat            10%@3x  10%@4x  10%@5x  15%@4x  V3.1    bh  no tail
+sym                                                                 
+bitfinex_BTCUSD    0.37    0.39    0.40    0.41  0.39  0.83     0.36
+bitfinex_DSHUSD    0.66    0.66    0.67    0.68  0.72  0.95     0.64
+bitfinex_EOSUSD    0.84    0.85    0.86    0.86  0.84  0.96     0.84
+bitfinex_ETCUSD    0.46    0.46    0.46    0.46  0.46  0.90     0.45
+bitfinex_ETHUSD    0.41    0.41    0.46    0.44  0.40  0.79     0.35
+bitfinex_IOTUSD    0.82    0.82    0.82    0.83  0.83  0.96     0.79
+bitfinex_LTCUSD    0.62    0.62    0.62    0.63  0.64  0.93     0.59
+bitfinex_XMRUSD    0.39    0.41    0.42    0.42  0.41  0.78     0.39
+bitfinex_XRPUSD    0.38    0.40    0.41    0.43  0.45  0.83     0.32
+bitfinex_ZECUSD    0.68    0.68    0.70    0.71  0.73  0.94     0.62
+bitstamp_BTCUSD    0.39    0.39    0.40    0.41  0.42  0.83     0.35
+bitstamp_XRPUSD    0.37    0.40    0.41    0.42  0.44  0.83     0.33
+coinbase_BTCUSD    0.37    0.38    0.39    0.41  0.42  0.77     0.32
+coinbase_ETHUSD    0.41    0.42    0.45    0.44  0.40  0.79     0.35
+coinbase_LTCUSD    0.50    0.52    0.53    0.55  0.56  0.89     0.44
+=== Bitfinex 2017-10 cohort ret_B
+strat            10%@3x  10%@4x  10%@5x  15%@4x   V3.1     bh  no tail
+sym                                                                   
+bitfinex_BTCUSD    2.36    2.70    2.74    3.29   2.56  18.13     1.50
+bitfinex_DSHUSD    1.48    1.57    1.33    1.31   0.81  -0.82     2.16
+bitfinex_EOSUSD   -0.87   -0.89   -0.88   -0.89  -0.84  -0.93    -0.89
+bitfinex_ETCUSD    7.46    8.13    8.08    7.79   5.23  -0.33     7.39
+bitfinex_ETHUSD    6.63    7.28    7.67    7.79   7.71   7.84     5.45
+bitfinex_IOTUSD    1.46    1.67    1.62    1.15   0.80  -0.91     2.87
+bitfinex_LTCUSD    5.60    5.90    6.29    5.99   5.22   0.21     5.44
+bitfinex_OMGUSD   -0.79   -0.80   -0.85   -0.80  -0.78  -0.98    -0.79
+bitfinex_SANUSD    7.99    6.26    6.00    4.51   8.18  -0.60    11.76
+bitfinex_XMRUSD    6.34    6.62    6.80    7.08   6.20   4.67     5.22
+bitfinex_XRPUSD    6.09    5.58    5.64    6.00   5.83   6.45     4.29
+bitfinex_ZECUSD   14.23   15.14   16.38   15.32  12.02   4.09    11.61
+          mean    med     lr     dd
+strat                              
+10%@3x   4.832  5.846  1.195  0.735
+10%@4x   4.929  5.738  1.198  0.753
+10%@5x   5.069  5.823  1.185  0.752
+15%@4x   4.877  5.248  1.173  0.771
+V3.1     4.412  5.222  1.134  0.755
+bh       3.068 -0.060 -0.127  0.965
+no tail  4.667  4.756  1.174  0.722

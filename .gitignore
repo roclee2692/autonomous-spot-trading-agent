@@ -7,3 +7,4 @@ __pycache__/
 state/
 research/results/*.csv
 research/**/__pycache__/
+research/results/*.pkl

@@ -92,6 +92,7 @@ class CoreParams:
     cost_mode: str = "pooled"            # "pooled": one C per cycle; "pergen": C and TPs per generation
     gen_anchor: str = "b3"               # next-gen anchor: "b3" fill price or "cost" (cycle C)
     stale_days: int | None = None        # cycle open & underwater this long -> drop deeper gens
+    fixed_g: float | None = None         # fixed gen size (share of the initial budget) instead of cash/units
 
 
 @dataclass
@@ -155,7 +156,8 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
     bear_days = (ctx or {}).get("bear_days", ())   # tail regime filter (decided at close)
 
     eq_days, eq_vals, pos_vals, pos_costs, cyc_pnl, cyc_cost_log = [], [], [], [], [], []
-    pend_log = []
+    pend_log, cash_log, cash_min_log = [], [], []
+    day_cash_min = math.inf
     n_buys = n_sells = 0
     tp1_count = 0
     fees_paid = 0.0
@@ -172,7 +174,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
         s.gen = 1
         s.pending_gen = None
         s.gen_low = math.inf
-        s.cycle_budget = max(s.cash, 0.0)
+        s.cycle_budget = p.fixed_g * units if p.fixed_g else max(s.cash, 0.0)
         s.stale = False
         s.cycle_t0 = -1
         s.buys = _ladder(anchor, p.d, p.w, s.cycle_budget / units, 1)
@@ -230,6 +232,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                     bought = True
                     max_gen_seen = max(max_gen_seen, gen)
                     events.append((i, f"buy_g{gen}", fill, usd))
+                    day_cash_min = min(day_cash_min, s.cash + spike_cash)
                     if last and gen == s.gen and s.gen < p.max_gens and not s.stale:
                         if p.gen_anchor == "cost":
                             s.pending_gen = s.cyc_cost / s.cyc_qty * (1 - p.gen_gap)
@@ -305,10 +308,11 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
             qty = spike_cash * (1 - fee) / fill
             fees_paid += spike_cash * fee
             s.spike_pos.append([fill * (1 + p.spike_tp), qty, spike_cash, i])
+            events.append((i, "spike_buy", fill, spike_cash))
             spike_cash = 0.0
             spike_order = None
             n_buys += 1
-            events.append((i, "spike_buy", fill))
+            day_cash_min = min(day_cash_min, s.cash + spike_cash)
         if s.spike_pos:
             keep = []
             for sp in s.spike_pos:
@@ -398,12 +402,15 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
             cyc_pnl.append((s.cyc_qty * ci / s.cyc_cost - 1) if s.cyc_cost > 0 else 0.0)
             cyc_cost_log.append(s.cyc_cost)
             pend_log.append(sum(b[1] for b in s.buys) + (spike_cash if spike_order is not None else 0.0))
+            cash_log.append(s.cash + spike_cash)
+            cash_min_log.append(min(day_cash_min, s.cash + spike_cash))
+            day_cash_min = math.inf
 
     return {
         "days": np.array(eq_days), "equity": np.array(eq_vals),
         "pos_value": np.array(pos_vals), "pos_cost": np.array(pos_costs),
         "cyc_pnl": np.array(cyc_pnl), "cyc_cost": np.array(cyc_cost_log),
-        "pending": np.array(pend_log),
+        "pending": np.array(pend_log), "cash": np.array(cash_log), "cash_min": np.array(cash_min_log),
         "n_buys": n_buys, "n_sells": n_sells, "tp1_count": tp1_count,
         "fees": fees_paid, "max_gen": max_gen_seen, "events": events,
         "tail_qty": sum(t.qty for t in s.tail), "tail_cost": sum(t.cost for t in s.tail),

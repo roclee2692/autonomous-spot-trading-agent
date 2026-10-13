@@ -1,0 +1,64 @@
+
+H=540 basket log: n_starts=39 block=5  White RC p (best of 24 cells) = 0.293
+ cell  mean_diff   ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.012 -0.002 0.024       0.081                0.641
+s10x5      0.020  0.005 0.035       0.015                0.692
+s15x4      0.019  0.000 0.043       0.047                0.615
+s15x5      0.030  0.001 0.070       0.038                0.615
+s10x3      0.007 -0.011 0.022       0.310                0.590
+
+H=540 coin-mean log: n_starts=39 block=5  White RC p (best of 24 cells) = 0.663
+ cell  mean_diff   ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.010 -0.002 0.021       0.083                0.564
+s10x5      0.006 -0.014 0.023       0.336                0.513
+s15x4      0.015 -0.001 0.036       0.059                0.590
+s15x5      0.011 -0.021 0.049       0.307                0.487
+s10x3     -0.003 -0.021 0.011       0.729                0.487
+
+H=1095 basket log: n_starts=20 block=7  White RC p (best of 24 cells) = 0.126
+ cell  mean_diff   ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.024  0.008 0.031       0.000                 0.80
+s10x5      0.042  0.008 0.067       0.000                 0.75
+s15x4      0.028 -0.006 0.053       0.313                 0.50
+s15x5      0.051 -0.007 0.101       0.162                 0.55
+s10x3      0.020  0.012 0.022       0.000                 0.70
+
+H=1095 coin-mean log: n_starts=20 block=7  White RC p (best of 24 cells) = 0.354
+ cell  mean_diff   ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.028  0.003 0.036       0.000                 0.85
+s10x5      0.029 -0.020 0.054       0.286                 0.85
+s15x4      0.025 -0.016 0.052       0.347                 0.50
+s15x5      0.027 -0.043 0.073       0.442                 0.45
+s10x3      0.021 -0.005 0.030       0.117                 0.85
+
+H=1825 basket log: n_starts=14 block=11  White RC p (best of 24 cells) = 0.000
+ cell  mean_diff  ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.081 0.081 0.095         0.0                1.000
+s10x5      0.114 0.112 0.138         0.0                1.000
+s15x4      0.100 0.100 0.135         0.0                0.929
+s15x5      0.141 0.139 0.190         0.0                0.857
+s10x3      0.054 0.044 0.064         0.0                1.000
+
+H=1825 coin-mean log: n_starts=14 block=11  White RC p (best of 24 cells) = 0.470
+ cell  mean_diff  ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.045 0.045 0.077         0.0                0.857
+s10x5      0.057 0.057 0.110         0.0                0.786
+s15x4      0.048 0.048 0.098         0.0                0.714
+s15x5      0.064 0.064 0.140         0.0                0.643
+s10x3      0.021 0.021 0.052         0.0                0.857
+
+H=2555 basket log: n_starts=6 block=15  White RC p (best of 24 cells) = 0.000
+ cell  mean_diff  ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.095 0.095 0.095         0.0                1.000
+s10x5      0.147 0.147 0.147         0.0                1.000
+s15x4      0.149 0.149 0.149         0.0                1.000
+s15x5      0.212 0.212 0.212         0.0                1.000
+s10x3      0.048 0.048 0.048         0.0                0.667
+
+H=2555 coin-mean log: n_starts=6 block=15  White RC p (best of 24 cells) = 0.000
+ cell  mean_diff  ci05  ci95  P(diff<=0)  share_starts_better
+s10x4      0.140 0.140 0.140         0.0                  1.0
+s10x5      0.178 0.178 0.178         0.0                  1.0
+s15x4      0.152 0.152 0.152         0.0                  1.0
+s15x5      0.198 0.198 0.198         0.0                  1.0
+s10x3      0.106 0.106 0.106         0.0                  1.0
