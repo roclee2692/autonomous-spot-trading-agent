@@ -1,0 +1,187 @@
+{
+ "generated": "2026-10-13T03:10:53.598714Z",
+ "series": {
+  "bitstamp_BTCUSD": {
+   "rows": 5536,
+   "first": "2011-08-18",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitstamp_ETHUSD": {
+   "rows": 3346,
+   "first": "2017-08-16",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitstamp_LTCUSD": {
+   "rows": 3407,
+   "first": "2017-06-16",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitstamp_XRPUSD": {
+   "rows": 3573,
+   "first": "2017-01-01",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitstamp_BCHUSD": {
+   "rows": 3236,
+   "first": "2017-12-04",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_BTCUSD": {
+   "rows": 4938,
+   "first": "2013-03-31",
+   "last": "2026-10-13",
+   "gaps_gt3d": 1
+  },
+  "bitfinex_LTCUSD": {
+   "rows": 4885,
+   "first": "2013-05-19",
+   "last": "2026-10-13",
+   "gaps_gt3d": 1
+  },
+  "bitfinex_ETHUSD": {
+   "rows": 3864,
+   "first": "2016-03-09",
+   "last": "2026-10-13",
+   "gaps_gt3d": 1
+  },
+  "bitfinex_ETCUSD": {
+   "rows": 3725,
+   "first": "2016-07-26",
+   "last": "2026-10-13",
+   "gaps_gt3d": 1
+  },
+  "bitfinex_XMRUSD": {
+   "rows": 3605,
+   "first": "2016-11-30",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_ZECUSD": {
+   "rows": 3637,
+   "first": "2016-10-29",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_DSHUSD": {
+   "rows": 3512,
+   "first": "2017-03-03",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_XRPUSD": {
+   "rows": 3435,
+   "first": "2017-05-19",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_EOSUSD": {
+   "rows": 3284,
+   "first": "2017-07-01",
+   "last": "2026-07-03",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_IOTUSD": {
+   "rows": 3411,
+   "first": "2017-06-12",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_NEOUSD": {
+   "rows": 3222,
+   "first": "2017-09-07",
+   "last": "2026-07-03",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_OMGUSD": {
+   "rows": 2925,
+   "first": "2017-07-14",
+   "last": "2025-07-16",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_XLMUSD": {
+   "rows": 3088,
+   "first": "2018-05-01",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_TRXUSD": {
+   "rows": 3185,
+   "first": "2018-01-24",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_BTGUSD": {
+   "rows": 2083,
+   "first": "2017-10-24",
+   "last": "2023-07-11",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_SANUSD": {
+   "rows": 1863,
+   "first": "2017-07-12",
+   "last": "2022-08-19",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_QTMUSD": {
+   "rows": 2575,
+   "first": "2017-10-10",
+   "last": "2024-12-05",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_ETPUSD": {
+   "rows": 2079,
+   "first": "2017-09-20",
+   "last": "2023-05-30",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_EDOUSD": {
+   "rows": 2043,
+   "first": "2017-10-20",
+   "last": "2023-05-30",
+   "gaps_gt3d": 0
+  },
+  "bitfinex_AVTUSD": {
+   "rows": 1131,
+   "first": "2017-10-10",
+   "last": "2021-03-27",
+   "gaps_gt3d": 13
+  },
+  "bitfinex_RRTUSD": {
+   "rows": 2608,
+   "first": "2016-10-10",
+   "last": "2026-10-12",
+   "gaps_gt3d": 112
+  },
+  "coinbase_BTCUSD": {
+   "rows": 4104,
+   "first": "2015-07-20",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "coinbase_ETHUSD": {
+   "rows": 3799,
+   "first": "2016-05-18",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  },
+  "coinbase_LTCUSD": {
+   "rows": 3709,
+   "first": "2016-08-17",
+   "last": "2026-10-13",
+   "gaps_gt3d": 0
+  }
+ },
+ "errors": {
+  "cc_BTC": "RuntimeError('HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,\"frontend\":{\"type\":2,\"message\":\"API key required, ')",
+  "cc_LTC": "RuntimeError('HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,\"frontend\":{\"type\":2,\"message\":\"API key required, ')",
+  "cc_XRP": "RuntimeError('HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,\"frontend\":{\"type\":2,\"message\":\"API key required, ')",
+  "cc_DOGE": "RuntimeError('HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,\"frontend\":{\"type\":2,\"message\":\"API key required, ')",
+  "cc_PPC": "RuntimeError('HTTP 401: {\"Data\":{},\"Err\":{\"type\":2,\"message\":\"API key required, please refer to the documentation at https://developers.coindesk.com/\",\"http_status_code\":401,\"frontend\":{\"type\":2,\"message\":\"API key required, ')",
+  "cc_aborted": "first 5 CryptoCompare calls failed"
+ }
+}
