@@ -8,6 +8,10 @@ def V3P(**kw):
     base=dict(d=(0.07,0.17,0.35), w=W3, gen_gap=0.20, max_gens=3, spike_frac=0.075, tp2_reanchor=False,
               tp1=0.25, tp1_frac=0.75, tp2_frac=0.0, tail_exit=('target',1.0), drift=0.20)
     base.update(kw); return E.CoreParams(**base)
+def V31P(**kw):
+    """V3.1 = V3 with the next-generation anchor at B3 fill x 0.60 (gen_gap 0.40)."""
+    kw.setdefault('gen_gap', 0.40)
+    return V3P(**kw)
 def v2spec(coin): return ('core', E.CoreParams(d=E.V2_CORE.get(coin,(0.07,0.17,0.29)), max_gens=3, spike_frac=0.075))
 SPECS={
  'V2': v2spec, 'V3': ('core', V3P()), 'bh': ('bh',),

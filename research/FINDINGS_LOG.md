@@ -96,3 +96,10 @@ H1095 -0.044; universe +0.032/+0.083 but ~0 without 2019-20 starts. R form not a
 R:btc_ma150 universe edge 79% from the single 2021-05-16 exit. Fast signals MA20/50/100 all ~ +0.03-0.04 on focus -> effect is
 tail shortening; OOS 'no tail' ~ same gain (+0.058/+0.076 vs best +0.065/+0.083). Selection-adjusted (26 variants) RC/SPA
 p 0.15-0.22 focus H540. Not adopted; record BTC vs MA100/MA200 at tail creation/sale for the 6-month review.
+
+## Round 2 (2026-10-13): try to overturn V3 -> V3.1
+79-variant one-at-a-time grid (focus/universe x H540/H1095, per-coin + basket metrics), depth grid (gap x mult x spike, 41
+configs), long-term paths, spike event study, red team, 3 skeptics. Only change: gen_gap 0.20 -> 0.40 (plateau 0.35-0.45):
+per-coin p10 +0.15..+0.32, basket p10 +0.06..+0.08, lr ~flat; beats exposure-matched V3; survives period/coin/offset
+jackknifes. Rejected: gen_mult>1 (exposure only), larger spike (2025 crash windows only). Corrections: at H540 V3 ~ V2 at
+portfolio level (edge = lower exposure); structural edge only at 3y; V3 lags in bull-start windows; CIs were too narrow.

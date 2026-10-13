@@ -1,7 +1,7 @@
 # Strategy research lab: spot volatility strategy V2.0 → V3.0
 
 - `REPORT_V3.md`: the research report (Chinese), in the requested 11-section structure.
-- `STRATEGY_V3.md`: the complete, executable V3.0 rulebook.
+- `STRATEGY_V3.md`: the complete, executable rulebook (now V3.1).
 - `FINDINGS_LOG.md`: working notes with the numbers behind each conclusion.
 
 ## Data
