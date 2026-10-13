@@ -103,3 +103,17 @@ configs), long-term paths, spike event study, red team, 3 skeptics. Only change:
 per-coin p10 +0.15..+0.32, basket p10 +0.06..+0.08, lr ~flat; beats exposure-matched V3; survives period/coin/offset
 jackknifes. Rejected: gen_mult>1 (exposure only), larger spike (2025 crash windows only). Corrections: at H540 V3 ~ V2 at
 portfolio level (edge = lower exposure); structural edge only at 3y; V3 lags in bull-start windows; CIs were too narrow.
+
+## Round 3 (2026-10-13): 5-10 year horizons, returns on principal, spike size, other lab's report -> V3.2
+Data: PIT cohorts 2018-07..2021-01 to 2026-09; 3/5/7y windows; 10y windows on Bitstamp/Bitfinex/Coinbase (BTC 2011-,
+LTC 2013-, ETH/ETC 2016-); Bitfinex 2017-10 cohort incl. dead coins. principal.py: ret on peak principal P, shadow B&H.
+Alts per coin (conservative fills): V3.2 beats B&H in 71-82% of coin-windows and the same-money shadow hold in 79-82%;
+5y median +83% vs B&H -11%. Equal-weight top-30 baskets: B&H mean higher (5y +299% vs +167%, 7y +866% vs +298%) from a
+few 10-200x coins, DD 0.80-0.84 vs 0.42-0.50, 5y p10 -51% vs +10%. BTC 10y median 239x B&H vs 11.6x V3.2 -> BTC/ETH out of scope.
+Tail grid (share 10-25% x target 2-10x): plateau 10-15% / 3-5x weakly dominates 25%/2x at 1.5/3/5/7/10y. Adopted 10%@5x:
+basket lr +0.020/+0.042/+0.114/+0.147, DD -1..-3pt, survives resting-limit tails + fill-at-limit + fee 0.2%. Skeptics:
+A survives, B weak (gain from mania windows; post-2022 ~tie; RC p 0.29/0.13), C adopt (both levers needed; no tail is the
+only simpler rule, loses 5y+ basket return). Spike: 7.5% of B (=0.25G, $49 at G=$200); net value vs ladder ~+0.3%/yr of B,
+median slightly negative -> skip when S<$25. Other lab: gens 1->6 monotone only with fixed $/gen and their 2025-26 window;
+in the PIT universe 6 vs 3 gens: same lr, worse p10. "<2 cycles/yr" health flag has no predictive power.
+Correction: daily-bar fills at min(limit, open) are optimistic; 3-7y per-coin lr -0.03..-0.23 with fill-at-limit.

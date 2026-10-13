@@ -1,0 +1,64 @@
+
+=== V3.2 B=$650  (tail limit sell at 5x C_lot, intraday)
+        years  lots  sold  cost_min  cost_med  val0_min  val0_med  notional_min  n_val0_lt5  n_val0_lt10  open_max  open_med  open_end  share_unplaceable  final_eq
+coin                                                                                                                                                               
+TAO       2.5    11     0     6.681    18.189     8.351    22.737        33.403           0            1        11       7.0        11              0.804     2.733
+AAVE      6.0    31    11     6.956    24.449     8.696    30.561        34.782           0            5        20       9.0        20              0.761     7.251
+HYPE      1.9    13     2     6.864    11.949     8.581    14.936        34.322           0            2        11       7.0        11              0.190     2.389
+LINK      7.7    40    22     7.248    40.904     9.059    51.130        36.238           0            3        18      13.0        18              0.716    15.048
+NEAR      6.0    35    12     7.345    38.373     9.181    47.966        36.723           0            3        23      14.0        23              0.823    10.608
+ZRO       2.3    11     0     7.648    18.147     9.560    22.684        38.240           0            1        11       5.0        11              0.805     1.928
+PENDLE    3.3    19     6     6.681    14.495     8.351    18.119        33.403           0            4        13      10.0        13              0.581     2.581
+RENDER    4.9    19     7     8.141    19.241    10.176    24.052        40.705           0            0        12       7.0        12              0.663     4.005
+UNI       6.1    32     6     7.140    25.938     8.925    32.422        35.702           0            5        26      13.0        26              0.868     8.493
+/tmp/claude-0/-home-user-autonomous-spot-trading-agent/89a7c8d1-f045-5346-9127-ee553eb34b09/scratchpad/r3/skepA/a3_orders.py:88: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  tot = pd.DataFrame(DAILY).fillna(0).sum(1)
+all 9 coins, open tail sells summed per day: max 145  median 49.0  last 11
+
+=== V3.1 B=$650  (tail limit sell at 2x C_lot, intraday)
+        years  lots  sold  cost_min  cost_med  val0_min  val0_med  notional_min  n_val0_lt5  n_val0_lt10  open_max  open_med  open_end  share_unplaceable  final_eq
+coin                                                                                                                                                               
+TAO       2.5    11     1    16.701    39.890    20.877    49.862        33.403           0            0        10       6.0        10              0.058     2.584
+AAVE      6.0    31    20    16.119    60.341    20.148    75.426        32.237           0            0        11       6.0        11              0.545     5.890
+HYPE      1.9    13    10    18.320    33.403    22.900    41.753        36.640           0            0         6       3.0         3              0.000     2.441
+LINK      7.7    40    30    19.548   104.191    24.435   130.238        39.096           0            0        10       6.0        10              0.349    14.082
+NEAR      6.0    35    27    18.240   100.788    22.800   125.985        36.480           0            0         8       3.0         8              0.655    14.867
+ZRO       2.3    11     2    16.471    34.880    20.589    43.600        32.942           0            0         9       3.0         9              0.335     1.854
+PENDLE    3.3    19    11    16.119    32.010    20.148    40.012        32.237           0            0         8       5.0         8              0.268     2.614
+RENDER    4.9    19    12    14.672    42.180    18.340    52.725        29.344           0            0         7       4.0         7              0.344     3.010
+UNI       6.1    32    16    16.113    56.193    20.141    70.241        32.226           0            0        18       9.0        16              0.595     8.290
+/tmp/claude-0/-home-user-autonomous-spot-trading-agent/89a7c8d1-f045-5346-9127-ee553eb34b09/scratchpad/r3/skepA/a3_orders.py:88: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  tot = pd.DataFrame(DAILY).fillna(0).sum(1)
+all 9 coins, open tail sells summed per day: max 82  median 24.0  last 3
+
+=== V3.2 satellite B=$162 (G~$50)  (tail limit sell at 5x C_lot, intraday)
+        years  lots  sold  cost_min  cost_med  val0_min  val0_med  notional_min  n_val0_lt5  n_val0_lt10  open_max  open_med  open_end  share_unplaceable  final_eq
+coin                                                                                                                                                               
+TAO       2.5    11     0     1.670     4.547     2.088     5.684         8.351           5            8        11       7.0        11              0.804     2.733
+AAVE      6.0    31    11     1.739     6.112     2.174     7.640         8.696          10           17        20       9.0        20              0.761     7.251
+HYPE      1.9    13     2     1.716     2.987     2.145     3.734         8.581          10           11        11       7.0        11              0.190     2.389
+LINK      7.7    40    22     1.812    10.226     2.265    12.783         9.059          10           17        18      13.0        18              0.716    15.048
+NEAR      6.0    35    12     1.836     9.593     2.295    11.991         9.181           9           17        23      14.0        23              0.823    10.608
+ZRO       2.3    11     0     1.912     4.537     2.390     5.671         9.560           5            9        11       5.0        11              0.805     1.928
+PENDLE    3.3    19     6     1.670     3.624     2.088     4.530         8.351          13           17        13      10.0        13              0.581     2.581
+RENDER    4.9    19     7     2.035     4.810     2.544     6.013        10.176           5           15        12       7.0        12              0.663     4.005
+UNI       6.1    32     6     1.785     6.484     2.231     8.106         8.925           9           20        26      13.0        26              0.868     8.493
+/tmp/claude-0/-home-user-autonomous-spot-trading-agent/89a7c8d1-f045-5346-9127-ee553eb34b09/scratchpad/r3/skepA/a3_orders.py:88: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  tot = pd.DataFrame(DAILY).fillna(0).sum(1)
+all 9 coins, open tail sells summed per day: max 145  median 49.0  last 11
+
+=== V3.2 satellite B=$97.5 (G=$30 min)  (tail limit sell at 5x C_lot, intraday)
+        years  lots  sold  cost_min  cost_med  val0_min  val0_med  notional_min  n_val0_lt5  n_val0_lt10  open_max  open_med  open_end  share_unplaceable  final_eq
+coin                                                                                                                                                               
+TAO       2.5    11     0     1.002     2.728     1.253     3.410         5.010           8           11        11       7.0        11              0.804     2.733
+AAVE      6.0    31    11     1.043     3.667     1.304     4.584         5.217          16           24        20       9.0        20              0.761     7.251
+HYPE      1.9    13     2     1.030     1.792     1.287     2.240         5.148          11           13        11       7.0        11              0.190     2.389
+LINK      7.7    40    22     1.087     6.136     1.359     7.670         5.436          15           23        18      13.0        18              0.716    15.048
+NEAR      6.0    35    12     1.102     5.756     1.377     7.195         5.509          14           23        23      14.0        23              0.823    10.608
+ZRO       2.3    11     0     1.147     2.722     1.434     3.403         5.736           9           10        11       5.0        11              0.805     1.928
+PENDLE    3.3    19     6     1.002     2.174     1.253     2.718         5.010          15           17        13      10.0        13              0.581     2.581
+RENDER    4.9    19     7     1.221     2.886     1.526     3.608         6.106          15           15        12       7.0        12              0.663     4.005
+UNI       6.1    32     6     1.071     3.891     1.339     4.863         5.355          16           24        26      13.0        26              0.868     8.493
+/tmp/claude-0/-home-user-autonomous-spot-trading-agent/89a7c8d1-f045-5346-9127-ee553eb34b09/scratchpad/r3/skepA/a3_orders.py:88: Pandas4Warning: Starting with pandas version 4.0 all arguments of sum will be keyword-only.
+  tot = pd.DataFrame(DAILY).fillna(0).sum(1)
+all 9 coins, open tail sells summed per day: max 145  median 49.0  last 11
