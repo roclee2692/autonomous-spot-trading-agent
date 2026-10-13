@@ -95,6 +95,7 @@ class CoreParams:
     fixed_g: float | None = None         # fixed gen size (share of the initial budget) instead of cash/units
     fill_at_limit: bool = False          # conservative: limits fill at the limit even if the bar opened through it
     tail_intraday: bool = False          # ("target", x) tail = resting limit sell at (1+x)C_lot from the next bar
+    tail_tiers: tuple | None = None      # ((share of cycle qty, multiple), ...): layered tail lots, each sold at multiple x C
 
 
 @dataclass
@@ -105,6 +106,7 @@ class Lot:
     peak: float = 0.0    # for trailing exits
     armed: bool = False
     exit_next: bool = False  # regime exit decided at a daily close, executed next bar open
+    target: float | None = None  # per-lot ("target", x) override for layered tails
 
 
 @dataclass
@@ -265,7 +267,12 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                 tp1_count += 1
                 if q2 > 1e-15:
                     s.tp2_lots.append([C * (1 + p.tp2), q2, q2 * C])
-                if qt > 1e-15:
+                if p.tail_tiers:
+                    for share, mult in p.tail_tiers:
+                        qq = q * share
+                        if qq > 1e-15:
+                            s.tail.append(Lot(qq, qq * C, i, target=mult - 1.0))
+                elif qt > 1e-15:
                     s.tail.append(Lot(qt, qt * C, i))
                 del s.groups[k]
                 s.cyc_qty -= q
@@ -308,7 +315,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
         if p.tail_intraday and s.tail and p.tail_exit[0] == "target":
             keep = []
             for lot in s.tail:
-                tgt = lot.cost / lot.qty * (1 + p.tail_exit[1])
+                tgt = lot.cost / lot.qty * (1 + (p.tail_exit[1] if lot.target is None else lot.target))
                 if i > lot.t0 and hi >= tgt * (1 + pen):
                     fill = tgt if p.fill_at_limit else max(tgt, oi)
                     s.cash += lot.qty * fill * (1 - fee)
@@ -371,7 +378,8 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                 keep = []
                 bear = day in bear_days
                 for lot in s.tail:
-                    act = _tail_decision(lot, ci, i, bars, p.tail_exit, bear)
+                    rule = p.tail_exit if lot.target is None else ("target", lot.target)
+                    act = _tail_decision(lot, ci, i, bars, rule, bear)
                     if act == 1:
                         s.cash += lot.qty * ci * (1 - fee)
                         fees_paid += lot.qty * ci * fee
