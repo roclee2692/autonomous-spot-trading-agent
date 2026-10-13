@@ -1,0 +1,237 @@
+
+################ H=540  starts=39  coin-windows=1103  coins/start min=13
+BASE: {'n_st': 39, 'bk_lr': np.float64(0.0201), 'bk_med': np.float64(0.0151), 'bk_win': np.float64(0.6923), 'coin_lr': np.float64(0.0067), 'coin_med_lr': np.float64(0.0151), 'coin_win': np.float64(0.5857), 'n_coin': 1103}
+[1] basket lr gain (mean over starts) = 0.0201; gross +0.0326 / -0.0126; coins contributing + 89 / - 47 of 138
+    top3 share 0.39  top5 share 0.51  top10 share 0.73   top coins: VET:0.0046, ETC:0.0016, CHZ:0.0015, THETA:0.0013, MATIC:0.0013, FLOKI:0.0010
+    worst coins: KAVA:-0.0010, ICX:-0.0011, GALA:-0.0011, OMG:-0.0012
+    per-coin summed lr diff: total 7.39; top3 share 0.88 top5 1.14  top: VET:3.56, THETA:1.47, ETC:1.46, MATIC:1.02, WLD:0.93
+                  n_st   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win
+drop                                                                  
+top1 bk-contrib     39  0.0157  0.6667   0.0035       0.0148    0.5804
+top1 coin-lr        39  0.0157  0.6667   0.0035       0.0148    0.5804
+top3 bk-contrib     39  0.0127  0.5641   0.0014       0.0140    0.5725
+top3 coin-lr        39  0.0127  0.5641   0.0009       0.0139    0.5721
+top5 bk-contrib     39  0.0104  0.5641  -0.0010       0.0132    0.5652
+top5 coin-lr        39  0.0115  0.5641  -0.0010       0.0132    0.5652
+top10 bk-contrib    39  0.0072  0.5897  -0.0058       0.0101    0.5414
+top10 coin-lr       39  0.0071  0.5897  -0.0060       0.0101    0.5408
+year 2019           32  0.0180  0.6875   0.0025       0.0147    0.5802
+year 2020           33  0.0202  0.6970   0.0062       0.0151    0.5959
+year 2021           33  0.0191  0.6667   0.0159       0.0151    0.5785
+year 2022           33  0.0222  0.6970   0.0083       0.0168    0.5915
+year 2023           33  0.0265  0.7879   0.0099       0.0211    0.6143
+year 2024           33  0.0148  0.6364  -0.0013       0.0114    0.5590
+year 2025           37  0.0195  0.6757   0.0057       0.0149    0.5810
+[2] by start year
+      n      bk  bk_win    coin    bk31
+year                                   
+2019  7  0.0295  0.7143  0.0231  0.7382
+2020  6  0.0193  0.6667  0.0093  0.8030
+2021  6  0.0253  0.8333 -0.0404 -0.2800
+2022  6  0.0080  0.6667 -0.0017  0.0999
+2023  6 -0.0154  0.1667 -0.0098  0.2555
+2024  6  0.0487  1.0000  0.0479 -0.0554
+2025  2  0.0301  1.0000  0.0245 -0.0873
+  mania overlap:
+          n      bk  bk_win    coin  coin_med
+overlap                                      
+False    24  0.0140  0.6667  0.0121    0.0146
+True     15  0.0297  0.7333 -0.0032    0.0205
+  mania contain:
+          n      bk  bk_win    coin  coin_med
+contain                                      
+False    36  0.0215  0.6944  0.0076    0.0200
+True      3  0.0030  0.6667 -0.0101   -0.0202
+  start>=2022: n=20 bk mean 0.0154 med 0.0155 win 0.65 blockboot P(<=0) 0.240; coin lr mean 0.0134 med 0.0150 win 0.58 n=600
+  no mania overlap: n=24 bk mean 0.0140 win 0.67 blockboot P(<=0) 0.140; coin lr mean 0.0127 win 0.58
+[3] exposure: V3.1 vs V3.2 raw
+    basket util 0.379 vs 0.363; basket medDD 0.283 vs 0.259; meanDD 0.312 vs 0.294; coin util 0.395 vs 0.382; coin medDD 0.338 vs 0.320
+    match bk medDD: k=0.906  V3.1(k) bk lr 0.2405 vs V3.2 0.2747  diff 0.0342 win 0.85  (bkDDmed 0.259, util 0.345)
+    match bk util: k=0.957  V3.1(k) bk lr 0.2483 vs V3.2 0.2747  diff 0.0264 win 0.74  (bkDDmed 0.272, util 0.363)
+    match coin medDD: k=0.920  coin lr V3.1(k) 0.1730 vs V3.2 0.1728  diff -0.0001 med 0.0174 win 0.59
+    match coin util: k=0.976  coin lr V3.1(k) 0.1694 vs V3.2 0.1728  diff 0.0035 med 0.0143 win 0.58
+[4] neighbours vs V3.1 (diffs)
+        bk_lr  bk_med  bk_ret_mean  bk_win  bk_p10   bk_dd    c_lr  c_med_ret  c_mean_ret   c_p10   c_p90   c_win  c_medDD  bk_lr_xtop3  c_lr_xtop3  bk_late
+cell                                                                                                                                                        
+s10x5  0.0201  0.0151       0.0364  0.6923  0.0370 -0.0238  0.0067    -0.0055      0.0385  0.0166  0.0725  0.5857  -0.0174       0.0127      0.0014   0.0154
+s10x4  0.0119  0.0116       0.0103  0.6410  0.0413 -0.0238  0.0113    -0.0031      0.0114  0.0166  0.0523  0.5703  -0.0202       0.0057      0.0076   0.0148
+s15x4  0.0189  0.0138       0.0534  0.6154  0.0311 -0.0098  0.0159    -0.0166      0.0553  0.0055  0.1904  0.6002   0.0010       0.0125      0.0116   0.0051
+s15x5  0.0296  0.0127       0.0915  0.6154  0.0247 -0.0009  0.0113    -0.0139      0.0950  0.0055  0.2695  0.5911   0.0095       0.0216      0.0051   0.0061
+s10x3  0.0072  0.0079      -0.0084  0.5897  0.0357 -0.0238 -0.0025     0.0029     -0.0079  0.0221 -0.0889  0.5258  -0.0293       0.0020     -0.0058   0.0180
+[5] liquidity buckets (bk_* = bucket-only equal-weight basket per start)
+        n_st  n_coin   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win  coin_ret_mean  coin_ret_med
+bucket                                                                                           
+r1-8      39     312  0.0169  0.7436   0.0080       0.0085    0.5545         0.0291        0.0079
+r9-16     39     307  0.0285  0.6667   0.0223       0.0217    0.5798         0.0564        0.0172
+r17-30    35     484  0.0188  0.6286  -0.0040       0.0240    0.6095         0.0332        0.0190
+
+################ H=1095  starts=20  coin-windows=554  coins/start min=13
+BASE: {'n_st': 20, 'bk_lr': np.float64(0.0422), 'bk_med': np.float64(0.0295), 'bk_win': np.float64(0.75), 'coin_lr': np.float64(0.0229), 'coin_med_lr': np.float64(0.0298), 'coin_win': np.float64(0.5993), 'n_coin': 554}
+[1] basket lr gain (mean over starts) = 0.0422; gross +0.0694 / -0.0273; coins contributing + 54 / - 48 of 103
+    top3 share 0.56  top5 share 0.74  top10 share 1.06   top coins: VET:0.0118, ETC:0.0077, CHZ:0.0040, XRP:0.0040, NEO:0.0037, BNB:0.0033
+    worst coins: XTZ:-0.0013, ONE:-0.0014, ONG:-0.0019, FTM:-0.0041
+    per-coin summed lr diff: total 12.67; top3 share 0.66 top5 0.92  top: VET:3.93, ETC:2.64, CHZ:1.76, NEO:1.67, XRP:1.61
+                  n_st   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win
+drop                                                                  
+top1 bk-contrib     20  0.0323  0.7500   0.0162       0.0274    0.5944
+top1 coin-lr        20  0.0323  0.7500   0.0162       0.0274    0.5944
+top3 bk-contrib     20  0.0215  0.7000   0.0084       0.0197    0.5792
+top3 coin-lr        20  0.0215  0.7000   0.0084       0.0197    0.5792
+top5 bk-contrib     20  0.0150  0.5000   0.0022       0.0144    0.5544
+top5 coin-lr        20  0.0150  0.5000   0.0022       0.0144    0.5544
+top10 bk-contrib    20 -0.0029  0.5000  -0.0094       0.0074    0.5228
+top10 coin-lr       20  0.0029  0.4500  -0.0113       0.0097    0.5302
+year 2019           15  0.0170  0.6667   0.0043       0.0148    0.5556
+year 2020           16  0.0444  0.6875   0.0231       0.0352    0.6129
+year 2021           16  0.0461  0.6875   0.0424       0.0400    0.6060
+year 2022           16  0.0555  0.9375   0.0263       0.0352    0.6267
+year 2023           17  0.0459  0.7647   0.0192       0.0317    0.5970
+[2] by start year
+      n      bk  bk_win    coin    bk31
+year                                   
+2019  5  0.1176  1.0000  0.1040  1.0529
+2020  4  0.0333  1.0000  0.0221  0.4972
+2021  4  0.0263  1.0000 -0.0478  0.1243
+2022  4 -0.0114  0.0000  0.0105  0.3861
+2023  3  0.0207  0.6667  0.0420  0.0179
+  mania overlap:
+          n      bk  bk_win    coin  coin_med
+overlap                                      
+False     8  0.0038   0.375  0.0227    0.0142
+True     12  0.0677   1.000  0.0337    0.0458
+  mania contain:
+          n      bk  bk_win    coin  coin_med
+contain                                      
+False    12  0.0113  0.5833 -0.0017    0.0165
+True      8  0.0884  1.0000  0.0757    0.0582
+  start>=2022: n=7 bk mean 0.0024 med -0.0047 win 0.29 blockboot P(<=0) 0.000; coin lr mean 0.0240 med 0.0109 win 0.55 n=210
+  no mania overlap: n=8 bk mean 0.0038 win 0.38 blockboot P(<=0) 0.000; coin lr mean 0.0227 win 0.55
+[3] exposure: V3.1 vs V3.2 raw
+    basket util 0.454 vs 0.441; basket medDD 0.481 vs 0.456; meanDD 0.441 vs 0.424; coin util 0.490 vs 0.481; coin medDD 0.552 vs 0.530
+    match bk medDD: k=0.895  V3.1(k) bk lr 0.4326 vs V3.2 0.5096  diff 0.0770 win 1.00  (bkDDmed 0.456, util 0.415)
+    match bk util: k=0.965  V3.1(k) bk lr 0.4560 vs V3.2 0.5096  diff 0.0536 win 0.90  (bkDDmed 0.473, util 0.441)
+    match coin medDD: k=0.922  coin lr V3.1(k) 0.2448 vs V3.2 0.2571  diff 0.0123 med 0.0440 win 0.60
+    match coin util: k=0.990  coin lr V3.1(k) 0.2354 vs V3.2 0.2571  diff 0.0217 med 0.0292 win 0.59
+[4] neighbours vs V3.1 (diffs)
+        bk_lr  bk_med  bk_ret_mean  bk_win  bk_p10   bk_dd    c_lr  c_med_ret  c_mean_ret   c_p10   c_p90   c_win  c_medDD  bk_lr_xtop3  c_lr_xtop3  bk_late
+cell                                                                                                                                                        
+s10x5  0.0422  0.0295       0.1122    0.75  0.0247 -0.0255  0.0229     0.0293      0.0812  0.0141  0.2414  0.5993  -0.0221       0.0215      0.0084   0.0024
+s10x4  0.0244  0.0078       0.0597    0.80  0.0449 -0.0307  0.0243     0.0294      0.0399 -0.0029  0.1460  0.5957  -0.0262       0.0065      0.0124   0.0079
+s15x4  0.0279  0.0017       0.0973    0.50  0.0154  0.0065  0.0167    -0.0049      0.0621 -0.0202  0.2846  0.5722   0.0018       0.0111      0.0053  -0.0082
+s15x5  0.0513  0.0133       0.1702    0.55 -0.0018  0.0115  0.0154    -0.0351      0.1194 -0.0100  0.4864  0.5560   0.0071       0.0312      0.0008  -0.0156
+s10x3  0.0198  0.0155       0.0295    0.70  0.0535 -0.0470  0.0206     0.0364      0.0254  0.0208  0.0887  0.5776  -0.0412       0.0048      0.0104   0.0211
+[5] liquidity buckets (bk_* = bucket-only equal-weight basket per start)
+        n_st  n_coin   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win  coin_ret_mean  coin_ret_med
+bucket                                                                                           
+r1-8      20     160  0.0444  0.7500   0.0338       0.0259    0.6125         0.1110        0.0400
+r9-16     20     156  0.0561  0.7500   0.0342       0.0332    0.5897         0.1441        0.0312
+r17-30    17     238  0.0118  0.6471   0.0081       0.0361    0.5966         0.0200        0.0285
+
+################ H=1825  starts=14  coin-windows=323  coins/start min=4
+BASE: {'n_st': 14, 'bk_lr': np.float64(0.1136), 'bk_med': np.float64(0.113), 'bk_win': np.float64(1.0), 'coin_lr': np.float64(0.0349), 'coin_med_lr': np.float64(0.062), 'coin_win': np.float64(0.6409), 'n_coin': 323}
+[1] basket lr gain (mean over starts) = 0.1136; gross +0.1386 / -0.0250; coins contributing + 34 / - 32 of 68
+    top3 share 0.45  top5 share 0.67  top10 share 0.95   top coins: VET:0.0195, BNB:0.0164, NEO:0.0154, ETC:0.0144, CHZ:0.0101, FET:0.0091
+    worst coins: NULS:-0.0018, BCH:-0.0018, ONG:-0.0039, XLM:-0.0051
+    per-coin summed lr diff: total 11.27; top3 share 0.95 top5 1.40  top: VET:3.86, NEO:3.70, ETC:3.17, CHZ:2.51, THETA:2.50
+                  n_st   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win
+drop                                                                  
+top1 bk-contrib     14  0.0980  1.0000   0.0238       0.0577    0.6346
+top1 coin-lr        14  0.0980  1.0000   0.0238       0.0577    0.6346
+top3 bk-contrib     14  0.0769  1.0000   0.0102       0.0457    0.6140
+top3 coin-lr        14  0.0768  1.0000   0.0019       0.0442    0.6042
+top5 bk-contrib     14  0.0523  1.0000  -0.0102       0.0308    0.5926
+top5 coin-lr        14  0.0625  0.8571  -0.0161       0.0308    0.5899
+top10 bk-contrib    14  0.0137  0.7143  -0.0394       0.0136    0.5388
+top10 coin-lr       14  0.0466  0.7143  -0.0501       0.0143    0.5403
+year 2018           11  0.1013  1.0000   0.0287       0.0583    0.6246
+year 2019           10  0.0997  1.0000  -0.0029       0.0442    0.5991
+year 2020           10  0.1235  1.0000   0.0249       0.0620    0.6749
+year 2021           11  0.1295  1.0000   0.0891       0.0791    0.6738
+[2] by start year
+      n      bk  bk_win    coin    bk31
+year                                   
+2018  3  0.1584     1.0  0.1250  0.9662
+2019  4  0.1483     1.0  0.1347  1.3436
+2020  4  0.0888     1.0  0.0517  0.7919
+2021  3  0.0553     1.0 -0.1055  0.0511
+  mania overlap:
+          n      bk  bk_win    coin  coin_med
+overlap                                      
+True     14  0.1136     1.0  0.0574    0.0812
+  mania contain:
+          n      bk  bk_win    coin  coin_med
+contain                                      
+False     4  0.0559     1.0 -0.0730    0.0198
+True     10  0.1366     1.0  0.1096    0.1057
+[3] exposure: V3.1 vs V3.2 raw
+    basket util 0.521 vs 0.501; basket medDD 0.520 vs 0.501; meanDD 0.519 vs 0.494; coin util 0.584 vs 0.579; coin medDD 0.684 vs 0.670
+    match bk medDD: k=0.903  V3.1(k) bk lr 0.7778 vs V3.2 0.9417  diff 0.1639 win 1.00  (bkDDmed 0.501, util 0.489)
+    match bk util: k=0.941  V3.1(k) bk lr 0.7978 vs V3.2 0.9417  diff 0.1439 win 1.00  (bkDDmed 0.507, util 0.501)
+    match coin medDD: k=0.942  coin lr V3.1(k) 0.3988 vs V3.2 0.3976  diff -0.0011 med 0.0737 win 0.64
+    match coin util: k=0.993  coin lr V3.1(k) 0.3703 vs V3.2 0.3976  diff 0.0273 med 0.0630 win 0.64
+[4] neighbours vs V3.1 (diffs)
+        bk_lr  bk_med  bk_ret_mean  bk_win  bk_p10   bk_dd    c_lr  c_med_ret  c_mean_ret   c_p10   c_p90   c_win  c_medDD  bk_lr_xtop3  c_lr_xtop3  bk_late
+cell                                                                                                                                                        
+s10x5  0.1136  0.1130       0.3496  1.0000  0.0596 -0.0188  0.0349     0.1422      0.2963 -0.0150  0.8906  0.6409  -0.0140       0.0769      0.0102      NaN
+s10x4  0.0808  0.0740       0.2297  1.0000  0.0753 -0.0248  0.0302     0.1849      0.1918 -0.0150  0.3980  0.6161  -0.0240       0.0582      0.0131      NaN
+s15x4  0.1003  0.1211       0.3403  0.9286  0.0129  0.0069  0.0244     0.1379      0.2889 -0.0245  0.8332  0.6223   0.0086       0.0694      0.0050      NaN
+s15x5  0.1411  0.1753       0.5006  0.8571 -0.0036  0.0113  0.0306     0.0671      0.4295 -0.0385  1.3091  0.6347   0.0181       0.0931      0.0017      NaN
+s10x3  0.0542  0.0583       0.1265  1.0000  0.0883 -0.0321  0.0136     0.2237      0.1185 -0.0073  0.1455  0.5666  -0.0307       0.0459      0.0016      NaN
+[5] liquidity buckets (bk_* = bucket-only equal-weight basket per start)
+        n_st  n_coin   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win  coin_ret_mean  coin_ret_med
+bucket                                                                                           
+r1-8      14     105  0.0719  0.8571   0.0372       0.0457    0.6476         0.2201        0.0914
+r9-16     12      92  0.1494  0.9167   0.0719       0.1198    0.6848         0.5649        0.1517
+r17-30     9     126  0.0830  0.7778   0.0060       0.0760    0.6032         0.1637        0.0346
+
+################ H=2555  starts=6  coin-windows=83  coins/start min=4
+BASE: {'n_st': 6, 'bk_lr': np.float64(0.1469), 'bk_med': np.float64(0.1575), 'bk_win': np.float64(1.0), 'coin_lr': np.float64(0.178), 'coin_med_lr': np.float64(0.1535), 'coin_win': np.float64(0.7952), 'n_coin': 83}
+[1] basket lr gain (mean over starts) = 0.1469; gross +0.1743 / -0.0274; coins contributing + 22 / - 8 of 31
+    top3 share 0.53  top5 share 0.73  top10 share 1.05   top coins: NEO:0.0346, BNB:0.0244, ETC:0.0183, QTUM:0.0168, TRX:0.0131, ADA:0.0106
+    worst coins: LINK:-0.0002, NULS:-0.0007, XLM:-0.0101, ONG:-0.0162
+    per-coin summed lr diff: total 14.77; top3 share 0.43 top5 0.63  top: NEO:2.91, IOTA:1.94, VET:1.53, QTUM:1.51, ETC:1.48
+                  n_st   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win
+drop                                                                  
+top1 bk-contrib      6  0.1225  1.0000   0.1541       0.1384    0.7792
+top1 coin-lr         6  0.1225  1.0000   0.1541       0.1384    0.7792
+top3 bk-contrib      6  0.1068  1.0000   0.1498       0.1383    0.7612
+top3 coin-lr         6  0.1057  1.0000   0.1199       0.1294    0.7571
+top5 bk-contrib      6  0.0768  1.0000   0.1363       0.1158    0.7241
+top5 coin-lr         6  0.0761  1.0000   0.0887       0.0987    0.7213
+top10 bk-contrib     6 -0.0105  0.3333   0.0686       0.0485    0.6190
+top10 coin-lr        6  0.0374  0.6667   0.0421       0.0443    0.6136
+year 2018            3  0.1214  1.0000   0.1802       0.1638    0.7541
+year 2019            3  0.1723  1.0000   0.1719       0.1457    0.9091
+[2] by start year
+      n      bk  bk_win    coin    bk31
+year                                   
+2018  3  0.1723     1.0  0.1706  1.4054
+2019  3  0.1214     1.0  0.1861  1.2901
+  mania overlap:
+         n      bk  bk_win    coin  coin_med
+overlap                                     
+True     6  0.1469     1.0  0.1783    0.1469
+  mania contain:
+         n      bk  bk_win    coin  coin_med
+contain                                     
+True     6  0.1469     1.0  0.1783    0.1469
+[3] exposure: V3.1 vs V3.2 raw
+    basket util 0.504 vs 0.485; basket medDD 0.529 vs 0.493; meanDD 0.521 vs 0.483; coin util 0.554 vs 0.534; coin medDD 0.684 vs 0.658
+    match bk medDD: k=0.761  V3.1(k) bk lr 1.1543 vs V3.2 1.4946  diff 0.3403 win 1.00  (bkDDmed 0.493, util 0.446)
+    match bk util: k=0.915  V3.1(k) bk lr 1.2829 vs V3.2 1.4946  diff 0.2117 win 1.00  (bkDDmed 0.518, util 0.485)
+    match coin medDD: k=0.836  coin lr V3.1(k) 0.8241 vs V3.2 1.0446  diff 0.2205 med 0.2665 win 0.77
+    match coin util: k=0.938  coin lr V3.1(k) 0.8565 vs V3.2 1.0446  diff 0.1881 med 0.1796 win 0.77
+[4] neighbours vs V3.1 (diffs)
+        bk_lr  bk_med  bk_ret_mean  bk_win  bk_p10   bk_dd    c_lr  c_med_ret  c_mean_ret   c_p10   c_p90   c_win  c_medDD  bk_lr_xtop3  c_lr_xtop3  bk_late
+cell                                                                                                                                                        
+s10x5  0.1469  0.1575       0.6099  1.0000  0.5288 -0.0357  0.1780     0.9763      0.5037 -0.0060  0.0340  0.7952  -0.0267       0.1068      0.1498      NaN
+s10x4  0.0954  0.0925       0.3798  1.0000  0.3851 -0.0464  0.1407     0.6842      0.3083 -0.0188 -0.5206  0.7952  -0.0349       0.0809      0.1232      NaN
+s15x4  0.1487  0.1498       0.6188  1.0000  0.5193 -0.0110  0.1514     0.4984      0.5295  0.0144  0.5566  0.8193  -0.0161       0.1066      0.1293      NaN
+s15x5  0.2123  0.2135       0.9220  1.0000  0.7118 -0.0004  0.1951     0.8156      0.7898  0.0334  1.3572  0.8193  -0.0127       0.1406      0.1595      NaN
+s10x3  0.0484  0.0584       0.1783  0.6667  0.3119 -0.0549  0.1143     0.6344      0.1566 -0.0105 -0.5831  0.7108  -0.0360       0.0645      0.1104      NaN
+[5] liquidity buckets (bk_* = bucket-only equal-weight basket per start)
+        n_st  n_coin   bk_lr  bk_win  coin_lr  coin_med_lr  coin_win  coin_ret_mean  coin_ret_med
+bucket                                                                                           
+r1-8       6      41  0.1234     1.0   0.1243       0.0995    0.8049         0.5235        0.3981
+r9-16      4      28  0.2710     1.0   0.2732       0.3123    0.8571         0.8361        0.7349
+r17-30     1      14 -0.0459     0.0   0.1448       0.1878    0.6429        -0.2192        0.0695

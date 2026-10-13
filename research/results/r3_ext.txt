@@ -1,0 +1,95 @@
+
+=== X2 their TEST window, return on budget (ret_P in second table)
+spec    V2 (ours)  V2 their conv (6 gens, $200)   V3.1  V3.2 cand (10%@5x)     bh
+coin                                                                             
+AAVE        0.155                         0.322  0.282               0.400 -0.445
+HYPE        2.661                         1.414  1.079               1.004  2.578
+LINK        0.097                         0.145  0.281               0.335 -0.334
+NEAR        0.566                         0.785  0.433               0.373  0.199
+PENDLE      0.048                         0.272  0.106               0.158 -0.546
+RENDER     -0.482                         0.205  0.335               0.465 -0.706
+TAO         0.807                         0.496  0.510               0.617 -0.331
+ZRO         0.583                         0.586  0.808               0.939 -0.577
+spec    V2 (ours)  V2 their conv (6 gens, $200)   V3.1  V3.2 cand (10%@5x)     bh
+coin                                                                             
+AAVE        0.155                         0.440  0.394               0.623 -0.445
+HYPE        2.661                         2.578  2.186               2.128  2.578
+LINK        0.097                         0.233  0.469               0.592 -0.334
+NEAR        0.566                         1.112  0.627               0.540  0.199
+PENDLE      0.048                         0.389  0.150               0.236 -0.546
+RENDER     -0.482                         0.277  0.476               0.693 -0.706
+TAO         0.807                         0.803  0.827               1.049 -0.331
+ZRO         0.583                         0.892  1.150               1.401 -0.577
+
+=== X4 common window since ZRO listing: 2024-06-26
+           bh           cycles              ret          
+spec     V3.1 V3.2 cand   V3.1 V3.2 cand   V3.1 V3.2 cand
+coin                                                     
+NEAR    0.087     0.087   11.0      11.0  0.904     1.028
+PENDLE -0.609    -0.609    8.0       8.0  0.451     0.531
+RENDER -0.740    -0.740    5.0       5.0  0.107     0.277
+UNI    -0.183    -0.183   10.0      10.0  1.168     1.080
+ZRO    -0.236    -0.236   11.0      11.0  0.716     0.864
+
+=== X3 health indicator (<2 cycles in past 12 months) vs next 540 days (V3.2 candidate rules)
+         n  fwd_med  fwd_lr  fwd_p10  bh_med
+flag                                        
+False  815    0.157   0.120   -0.447  -0.308
+True   116    0.275   0.342    0.022   0.616
+relative to same-start average: {'mean': {False: -0.003, True: 0.02}, 'median': {False: 0.024, True: -0.015}, 'size': {False: 815, True: 116}}
+=== X1a their TEST window 2025-01-01..end, 8 coins: mean over coins
+                 ret_B      P  ret_P  maxdd
+spec                                       
+ours fixedG g1   0.144  0.371  0.403  0.274
+ours fixedG g2   0.503  0.589  0.890  0.306
+ours fixedG g3   0.503  0.589  0.890  0.306
+ours fixedG g4   0.503  0.589  0.890  0.306
+ours fixedG g6   0.503  0.589  0.890  0.306
+ours share g1    0.301  1.000  0.301  0.708
+ours share g2    0.761  0.920  0.883  0.450
+ours share g3    0.536  0.621  0.908  0.323
+ours share g4    0.431  0.479  0.938  0.257
+ours share g6    0.331  0.340  0.999  0.191
+their fixed$ g1  0.058  0.170  0.303  0.144
+their fixed$ g2  0.123  0.304  0.362  0.262
+their fixed$ g3  0.266  0.469  0.536  0.371
+their fixed$ g4  0.413  0.587  0.713  0.402
+their fixed$ g6  0.528  0.665  0.840  0.410
+
+=== X1b universe windows: generations under each convention
+                       medB    lrB   p10B      P    lrP   p10P     dd
+H    spec                                                            
+540  ours fixedG g1   0.084  0.130 -0.261  0.316  0.111 -0.735  0.259
+     ours fixedG g2   0.211  0.190 -0.397  0.496  0.309 -0.634  0.277
+     ours fixedG g3   0.222  0.178 -0.368  0.542  0.388 -0.469  0.277
+     ours fixedG g4   0.222  0.168 -0.371  0.545  0.391 -0.462  0.277
+     ours fixedG g6   0.222  0.166 -0.373  0.545  0.392 -0.468  0.277
+     ours share g1   -0.004 -0.064 -0.789  0.987 -0.059 -0.789  0.686
+     ours share g2    0.285  0.167 -0.659  0.843  0.246 -0.662  0.439
+     ours share g3    0.211  0.173 -0.409  0.598  0.367 -0.484  0.320
+     ours share g4    0.171  0.157 -0.306  0.459  0.392 -0.466  0.256
+     ours share g6    0.130  0.142 -0.215  0.322  0.419 -0.474  0.188
+     their fixed$ g1 -0.002  0.100 -0.132  0.174 -0.047 -0.793  0.184
+     their fixed$ g2 -0.008  0.121 -0.235  0.307 -0.054 -0.781  0.285
+     their fixed$ g3  0.033  0.138 -0.322  0.420  0.014 -0.757  0.354
+     their fixed$ g4  0.072  0.143 -0.396  0.500  0.094 -0.721  0.393
+     their fixed$ g6  0.097  0.137 -0.458  0.574  0.216 -0.570  0.402
+1095 ours fixedG g1   0.219  0.222 -0.244  0.304  0.318 -0.752  0.323
+     ours fixedG g2   0.440  0.323 -0.355  0.481  0.515 -0.631  0.380
+     ours fixedG g3   0.484  0.339 -0.304  0.553  0.611 -0.423  0.383
+     ours fixedG g4   0.490  0.330 -0.264  0.569  0.637 -0.375  0.383
+     ours fixedG g6   0.490  0.326 -0.264  0.570  0.641 -0.375  0.383
+     ours share g1   -0.147 -0.221 -0.834  0.995 -0.220 -0.834  0.852
+     ours share g2    0.371  0.165 -0.722  0.932  0.212 -0.724  0.712
+     ours share g3    0.423  0.257 -0.487  0.725  0.442 -0.506  0.530
+     ours share g4    0.361  0.262 -0.263  0.541  0.546 -0.355  0.434
+     ours share g6    0.263  0.239 -0.152  0.359  0.620 -0.349  0.336
+     their fixed$ g1 -0.031  0.064 -0.141  0.183 -0.214 -0.809  0.321
+     their fixed$ g2 -0.071  0.048 -0.252  0.335 -0.272 -0.826  0.469
+     their fixed$ g3 -0.088  0.041 -0.353  0.466 -0.230 -0.817  0.538
+     their fixed$ g4 -0.053  0.041 -0.429  0.573 -0.135 -0.775  0.594
+     their fixed$ g6  0.038  0.012 -0.560  0.717  0.003 -0.705  0.666
+
+real	1m7.156s
+user	3m46.079s
+sys	0m1.962s

@@ -1,0 +1,53 @@
+
+=== your 9 coins, 540-day windows (step 30), conservative fills
+              n  end_B_med  end_P_med  P_mean  dd_med  dd_p90  p_win   gain   loss    lev
+strat                                                                                    
+V2 (yours)  335      0.145      0.302   0.594   0.398   0.637  0.675  0.275 -0.078  0.113
+V3.1        335      0.296      0.647   0.574   0.304   0.550  0.712  0.337 -0.072  0.164
+V3.2        335      0.290      0.610   0.576   0.322   0.540  0.723  0.325 -0.070  0.161
+bh          335     -0.084     -0.084   1.000   0.742   0.884  0.496  1.058 -0.280  0.059
+share of windows where each beats V2 (end of window): {'V3.1': 0.7, 'V3.2': 0.7, 'bh': 0.41}
+
+=== your 9 coins, 1095-day windows (step 30), conservative fills
+              n  end_B_med  end_P_med  P_mean  dd_med  dd_p90  p_win   gain   loss    lev
+strat                                                                                    
+V2 (yours)  197      0.243      0.365   0.758   0.628   0.825  0.692  0.678 -0.146  0.211
+V3.1        197      0.753      1.325   0.655   0.471   0.699  0.775  0.723 -0.095  0.330
+V3.2        197      0.710      1.157   0.668   0.462   0.707  0.789  0.716 -0.092  0.327
+bh          197      0.234      0.234   1.000   0.866   0.941  0.568  2.096 -0.299  0.213
+share of windows where each beats V2 (end of window): {'V3.1': 0.83, 'V3.2': 0.85, 'bh': 0.48}
+
+=== full history per coin: final multiple of budget (end_B+1) / max drawdown
+strat   V2 (yours)   V3.1   V3.2     bh
+coin                                   
+AAVE          2.78   6.13   7.54   4.15
+HYPE          3.26   2.44   2.39   9.07
+LINK         10.02  13.83  14.80  27.17
+NEAR          4.15  14.88  10.61   7.21
+PENDLE        1.74   2.61   2.58   2.51
+RENDER        1.52   3.01   4.01   0.29
+TAO           1.67   2.40   2.55   0.58
+UNI           2.67   8.29   8.49   1.36
+ZRO           1.46   1.85   1.93   0.68
+strat   V2 (yours)  V3.1  V3.2    bh
+coin                                
+AAVE          0.86  0.61  0.58  0.92
+HYPE          0.45  0.25  0.27  0.68
+LINK          0.89  0.57  0.56  0.90
+NEAR          0.91  0.80  0.83  0.95
+PENDLE        0.71  0.55  0.53  0.85
+RENDER        0.85  0.81  0.81  0.95
+TAO           0.50  0.38  0.34  0.80
+UNI           0.84  0.63  0.56  0.94
+ZRO           0.57  0.44  0.42  0.90
+strat   V2 (yours)   V3.1   V3.2     bh
+coin                                   
+AAVE          2.81   7.66  10.90   4.15
+HYPE          4.63   3.58   3.48   9.07
+LINK         10.02  32.84  33.06  27.17
+NEAR          4.55  14.88  10.61   7.21
+PENDLE        1.93   5.14   4.84   2.51
+RENDER        1.52   3.01   4.01   0.29
+TAO           1.96   3.20   3.45   0.58
+UNI           2.67   9.91  11.22   1.36
+ZRO           1.51   1.85   1.93   0.68

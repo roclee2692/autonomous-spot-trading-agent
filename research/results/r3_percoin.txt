@@ -1,0 +1,85 @@
+uniform ladder, pooled 60-day touch probability on the 9 coins: [0.865, 0.672, 0.347]
+
+=== stability: depth reached with those probabilities, first half vs second half of each coin history
+        years  1st d1  1st d2  1st d3  2nd d1  2nd d2  2nd d3
+coin                                                         
+TAO       2.3   0.201   0.294   0.465   0.073   0.196   0.371
+AAVE      5.8   0.106   0.223   0.349   0.058   0.147   0.310
+HYPE      1.7   0.055   0.141   0.343   0.044   0.112   0.214
+LINK      7.6   0.071   0.156   0.348   0.050   0.116   0.279
+NEAR      5.8   0.081   0.212   0.369   0.061   0.155   0.363
+ZRO       2.1   0.108   0.224   0.403   0.087   0.183   0.385
+PENDLE    3.1   0.055   0.128   0.344   0.075   0.166   0.386
+RENDER    4.7   0.056   0.154   0.351   0.105   0.204   0.417
+UNI       5.9   0.117   0.210   0.359   0.060   0.122   0.319
+rank correlation across coins, d1 first vs second half: 0.12
+rank correlation across coins, d2 first vs second half: 0.32
+rank correlation across coins, d3 first vs second half: 0.4
+
+=== 540-day windows (starts after one year of history), V3.2 rules otherwise
+                                 n  end_med     lr    p10  dd_med  beats_uniform
+ladder                                                                          
+V2 hand-set per coin           234    0.291  0.197 -0.307   0.318          0.564
+per-coin PIT (same fill odds)  234    0.272  0.186 -0.272   0.315          0.551
+uniform -7/-17/-35             234    0.199  0.165 -0.275   0.309          0.000
+ladder  V2 hand-set per coin  per-coin PIT (same fill odds)  uniform -7/-17/-35
+coin                                                                           
+AAVE                   0.319                          0.339               0.210
+LINK                   0.278                          0.255               0.190
+NEAR                  -0.049                         -0.040              -0.024
+PENDLE                 0.107                          0.095              -0.009
+RENDER                 0.210                          0.170               0.307
+TAO                    0.398                          0.350               0.280
+UNI                    0.207                          0.182               0.213
+
+=== 1095-day windows (starts after one year of history), V3.2 rules otherwise
+                                 n  end_med     lr    p10  dd_med  beats_uniform
+ladder                                                                          
+V2 hand-set per coin           133    0.733  0.551  0.249   0.436          0.714
+per-coin PIT (same fill odds)  133    0.615  0.482  0.139   0.408          0.481
+uniform -7/-17/-35             133    0.600  0.494  0.223   0.406          0.000
+ladder  V2 hand-set per coin  per-coin PIT (same fill odds)  uniform -7/-17/-35
+coin                                                                           
+AAVE                   0.796                          0.672               0.618
+LINK                   0.574                          0.483               0.391
+NEAR                   0.383                          0.318               0.328
+RENDER                 0.212                          0.327               0.788
+UNI                    0.581                          0.522               0.591
+
+latest PIT per-coin ladder (what the method would set today-ish):
+coin
+AAVE       (0.075, 0.143, 0.24)
+LINK       (0.07, 0.121, 0.364)
+NEAR        (0.15, 0.28, 0.446)
+PENDLE    (0.078, 0.243, 0.507)
+RENDER    (0.131, 0.229, 0.469)
+TAO        (0.223, 0.316, 0.49)
+UNI       (0.058, 0.119, 0.414)
+
+=== adding a uniform -7/-17/-29 ladder (isolates the shallower third order)
+-- 540
+                                 n  end_med     lr    p10  dd_med
+ladder                                                           
+V2 hand-set per coin           234    0.291  0.197 -0.307   0.318
+per-coin PIT (same fill odds)  234    0.272  0.186 -0.272   0.315
+uniform -7/-17/-29             234    0.258  0.178 -0.299   0.320
+uniform -7/-17/-35             234    0.199  0.165 -0.275   0.309
+core coins only (where V2 has its own ladders):
+ladder
+V2 hand-set per coin             0.296
+per-coin PIT (same fill odds)    0.289
+uniform -7/-17/-29               0.255
+uniform -7/-17/-35               0.199
+-- 1095
+                                 n  end_med     lr    p10  dd_med
+ladder                                                           
+V2 hand-set per coin           133    0.733  0.551  0.249   0.436
+per-coin PIT (same fill odds)  133    0.615  0.482  0.139   0.408
+uniform -7/-17/-29             133    0.631  0.507  0.222   0.434
+uniform -7/-17/-35             133    0.600  0.494  0.223   0.406
+core coins only (where V2 has its own ladders):
+ladder
+V2 hand-set per coin             0.652
+per-coin PIT (same fill odds)    0.549
+uniform -7/-17/-29               0.569
+uniform -7/-17/-35               0.471

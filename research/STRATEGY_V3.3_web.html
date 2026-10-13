@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>波动收割 V3.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a trading rulebook. Sticky section index on the left (chip bar on phones), one reading column, order-book colours: bids green, asks rust. */
+:root {
+  --bg: #f5f7f6;
+  --paper: #ffffff;
+  --fg: #18211f;
+  --muted: #5b6764;
+  --line: #d9e0dd;
+  --soft: #eaf0ed;
+  --accent: #1d4f73;
+  --bid: #1f7a58;
+  --bid-soft: #d6ece2;
+  --ask: #b0472c;
+  --ask-soft: #f4ddd5;
+  --warn: #9a6b0c;
+  --warn-soft: #f5ead0;
+  --display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1514; --paper: #151d1b; --fg: #e3eae7; --muted: #9aa8a4; --line: #2a3533; --soft: #1c2624;
+    --accent: #7fb4dc; --bid: #5fc49b; --bid-soft: #173a2d; --ask: #e58a6d; --ask-soft: #3e2219;
+    --warn: #e2b55a; --warn-soft: #3a2f16; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1514; --paper: #151d1b; --fg: #e3eae7; --muted: #9aa8a4; --line: #2a3533; --soft: #1c2624;
+  --accent: #7fb4dc; --bid: #5fc49b; --bid-soft: #173a2d; --ask: #e58a6d; --ask-soft: #3e2219;
+  --warn: #e2b55a; --warn-soft: #3a2f16; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.75; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 64px; display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 40px; }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; font-size: 13px; }
+nav.toc .label { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.toc a { display: block; padding: 4px 10px; border-radius: 6px; color: var(--muted); text-decoration: none; }
+nav.toc a:hover, nav.toc a:focus-visible { background: var(--soft); color: var(--fg); outline: none; }
+main { min-width: 0; }
+header.top { padding-bottom: 22px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .06em; color: var(--muted); }
+h1 { font-family: var(--display); font-size: clamp(30px, 5vw, 42px); line-height: 1.2; margin: 6px 0 10px; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 62ch; margin: 0; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 2px 10px; border-radius: 999px; background: var(--soft); color: var(--fg); white-space: nowrap; }
+.pill.mid { background: var(--bid-soft); color: var(--bid); }
+.pill.low { background: var(--warn-soft); color: var(--warn); }
+.pill.no { background: var(--ask-soft); color: var(--ask); }
+section { padding-block: 14px 26px; scroll-margin-top: 16px; }
+h2 { font-family: var(--display); font-size: 24px; line-height: 1.3; margin: 0 0 14px; text-wrap: balance; display: flex; align-items: baseline; gap: 12px; }
+h2 .num { font-family: var(--mono); font-size: 13px; color: var(--accent); font-weight: 500; }
+h3 { font-size: 16px; margin: 22px 0 8px; }
+p { margin: 0 0 10px; max-width: 70ch; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.goals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.goal { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; }
+.goal b { display: block; margin-bottom: 2px; }
+.goal span { color: var(--muted); font-size: 14px; }
+ol.principles { margin: 0; padding-left: 1.4em; display: grid; gap: 4px; max-width: 70ch; }
+ol.principles li::marker { font-family: var(--mono); color: var(--accent); }
+.verdicts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.verdicts li { display: grid; grid-template-columns: 9.5em minmax(0, 1fr) auto; gap: 14px; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.verdicts .k { font-weight: 700; }
+.verdicts .v { color: var(--fg); }
+.rules { display: grid; gap: 14px; }
+.rule { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; min-width: 0; }
+.rule h3 { margin: 0 0 8px; display: flex; align-items: baseline; gap: 10px; }
+.rule h3 .tag { font-family: var(--mono); font-size: 12px; color: var(--muted); font-weight: 400; }
+.rule ul { margin: 0; padding-left: 1.2em; display: grid; gap: 3px; }
+.formula { font-family: var(--mono); font-size: 14px; background: var(--soft); border-radius: 6px; padding: 8px 12px; display: inline-block; margin: 2px 0 8px; }
+.num-cell, td.n, th.n { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); margin: 8px 0 12px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; background: var(--soft); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+tr.pick td { background: var(--bid-soft); }
+tr.pick td:first-child { font-weight: 700; }
+td .sub { display: block; color: var(--muted); font-size: 12px; }
+.ladder { display: grid; gap: 4px; margin: 8px 0 6px; }
+.lad-gen { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-top: 8px; }
+.lad-row { display: grid; grid-template-columns: 4.8em minmax(0, 1fr) 8.5em; gap: 10px; align-items: center; font-size: 13px; }
+.lad-row .lvl { font-family: var(--mono); color: var(--bid); font-weight: 500; text-align: right; }
+.lad-row.spike .lvl { color: var(--warn); }
+.bar { position: relative; height: 14px; background: var(--soft); border-radius: 3px; overflow: hidden; }
+.bar .intr { position: absolute; inset: 0 auto 0 0; background: var(--bid); opacity: .28; }
+.bar .close { position: absolute; inset: 3px auto 3px 0; background: var(--bid); border-radius: 2px; }
+.lad-row .pct { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; white-space: nowrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.legend i { display: inline-block; width: 14px; height: 8px; border-radius: 2px; background: var(--bid); vertical-align: middle; margin-right: 5px; }
+.legend i.l { opacity: .28; }
+pre.flow { font-family: var(--mono); font-size: 13px; line-height: 1.6; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; margin: 8px 0; color: var(--fg); }
+pre.flow .c { color: var(--muted); }
+pre.flow .b { color: var(--bid); }
+pre.flow .s { color: var(--ask); }
+.timeline { list-style: none; margin: 8px 0 0; padding: 0; position: relative; }
+.timeline::before { content: ""; position: absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: var(--line); }
+.timeline li { position: relative; padding: 0 0 16px 30px; }
+.timeline li::before { content: ""; position: absolute; left: 1px; top: 7px; width: 14px; height: 14px; border-radius: 50%; background: var(--paper); border: 2px solid var(--accent); }
+.timeline li.can::before { background: var(--accent); }
+.timeline .when { font-family: var(--mono); font-size: 13px; color: var(--accent); }
+.timeline .what { display: block; }
+.loop { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0 4px; }
+.loop span.step { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; font-size: 14px; }
+.loop span.arr { color: var(--muted); font-family: var(--mono); }
+.gate { counter-reset: g; list-style: none; padding: 0; margin: 6px 0; display: grid; gap: 8px; max-width: 72ch; }
+.gate li { counter-increment: g; position: relative; padding-left: 34px; }
+.gate li::before { content: counter(g); position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--paper); font-family: var(--mono); font-size: 12px; display: grid; place-items: center; }
+.cols2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.reject { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.reject li { padding-left: 18px; position: relative; }
+.reject li::before { content: "×"; position: absolute; left: 0; color: var(--ask); font-weight: 700; }
+.version { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.version li { display: grid; grid-template-columns: 7.5em minmax(0, 1fr); gap: 12px; }
+.version .vn { font-family: var(--mono); color: var(--accent); }
+footer { margin-top: 30px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+code { font-family: var(--mono); font-size: .92em; background: var(--soft); padding: 1px 5px; border-radius: 4px; }
+a { color: var(--accent); }
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; padding-inline: 16px; }
+  nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); margin: 0 -16px 10px; padding: 8px 16px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  nav.toc .label { display: none; }
+  nav.toc ol { display: flex; gap: 4px; width: max-content; }
+  nav.toc a { white-space: nowrap; background: var(--soft); }
+  .goals, .cols2 { grid-template-columns: minmax(0, 1fr); }
+  .verdicts li { grid-template-columns: minmax(0, 1fr) auto; }
+  .verdicts .k { grid-column: 1 / -1; }
+  .lad-row { grid-template-columns: 4.2em minmax(0, 1fr); }
+  .lad-row .pct { grid-column: 2; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <nav class="toc" aria-label="目录">
+    <div class="label">目录</div>
+    <ol>
+      <li><a href="#top">目标与原则</a></li>
+      <li><a href="#verdict">结论</a></li>
+      <li><a href="#rules">执行规则</a></li>
+      <li><a href="#data">数据与理由</a></li>
+      <li><a href="#checks">预期区间</a></li>
+      <li><a href="#schedule">复盘时间点</a></li>
+      <li><a href="#evolve">自进化机制</a></li>
+      <li><a href="#rejected">已否决</a></li>
+      <li><a href="#open">未决与局限</a></li>
+      <li><a href="#versions">版本日志</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="top" id="top">
+      <div class="eyebrow">现货 · 不加杠杆 · 不预测方向 · 更新 2026-10-13（周二）</div>
+      <h1>波动收割 V3.3</h1>
+      <p class="lede">每个币是一个固定预算的子账户。下方挂三张等额买单，涨到 1.25 倍成本卖出 90%，剩下 10% 是零成本尾仓，涨到 5 倍时卖；深跌最多补三代，代与代之间留 40% 的距离。</p>
+      <div class="meta">
+        <span class="pill">适用：HYPE · TAO · LINK · AAVE · NEAR · ZRO · PENDLE · RENDER</span>
+        <span class="pill low">整体把握：中等偏低</span>
+      </div>
+    </header>
+
+    <section aria-labelledby="h-goal">
+      <h2 id="h-goal"><span class="num">一</span>目标</h2>
+      <div class="goals">
+        <div class="goal"><b>长期复利</b><span>看平均 log 收益，不看单次最大收益。</span></div>
+        <div class="goal"><b>任何行情下不出局</b><span>所有挂单全部成交也拿得住，不被迫卖出。</span></div>
+        <div class="goal"><b>年化约 20%</b><span>回测参考：你的 9 个币、3 年窗口，按预算的中位约 19.6%/年，保守成交。不是预测。</span></div>
+        <div class="goal"><b>保留大牛市暴露</b><span>尾仓是零成本的纯利润，涨得再多也不慌。</span></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-prin">
+      <h2 id="h-prin"><span class="num">二</span>原则</h2>
+      <ol class="principles">
+        <li>下面成交，就更新上面；上面成交，就更新下面。</li>
+        <li>不预测：不判断牛熊、不追涨、不抄底，全部提前挂限价单。</li>
+        <li>基本面失效优先于一切价格规则。</li>
+        <li>合理优先于理论最优：简单、少操作；没有证据就不动。</li>
+        <li>复利优先：两个方案打平时，选操作少、结构简单的那个。</li>
+        <li>活下来：随时问一句"所有挂单全部成交，我还愿意持有吗"。</li>
+        <li>历史概率只用来设计规则，不用来预测未来。</li>
+        <li>改规则只看真实数据，一次只改一处，改前写下预期和回滚条件。</li>
+      </ol>
+    </section>
+
+    <section id="verdict" aria-labelledby="h-verdict">
+      <h2 id="h-verdict"><span class="num">三</span>结论</h2>
+      <ul class="verdicts">
+        <li><span class="k">V3 结构胜过 V2</span><span class="v">你的 9 个币上，约 4/5 的 3 年窗口胜出；中位回撤 46%，V2 是 63%。</span><span class="pill mid">中</span></li>
+        <li><span class="k">收割 vs 持有</span><span class="v">随机挑一天卖出，收割赚钱概率 72–79%，持有 50–57%；按复利收割更高。持有只在大涨且卖在高位时赢。</span><span class="pill mid">中</span></li>
+        <li><span class="k">TP 1.25</span><span class="v">1.20–1.35 是平台，1.25 在每段行情里离最好都最近（最多落后 0.006）。</span><span class="pill low">中低</span></li>
+        <li><span class="k">尾仓 10% 挂 5 倍</span><span class="v">零成本、操作最少；分层方案按复利算打平，不改。</span><span class="pill low">低</span></li>
+        <li><span class="k">三档 −7 / −17 / −29%</span><span class="v">统一，不分币；更容易成交，在你的币上略好。</span><span class="pill low">低</span></li>
+        <li><span class="k">深跌 3 代，间隔 40%</span><span class="v">最差 10% 的情况明显改善，收益基本不变。</span><span class="pill mid">中</span></li>
+        <li><span class="k">插针单</span><span class="v">闪崩保险，平均收益小、不稳定；金额 ≥ $25 才挂。</span><span class="pill low">低</span></li>
+        <li><span class="k">不判断牛熊</span><span class="v">均线版在你的币上更差，四年周期版无法验证。</span><span class="pill no">证据不足</span></li>
+      </ul>
+      <p class="small muted" style="margin-top:10px">把握偏低的原因：你的币大多只有 1.9–7.7 年历史，基本只经历过一轮牛熊；回测窗口大量重叠。</p>
+    </section>
+
+    <section id="rules" aria-labelledby="h-rules">
+      <h2 id="h-rules"><span class="num">四</span>执行规则</h2>
+      <div class="rules">
+        <div class="rule">
+          <h3>预算 <span class="tag">每个币一个子账户</span></h3>
+          <div class="formula">B = 3G + S　·　S ≈ 0.25G　·　例：G = $200 → S ≈ $50，B ≈ $650</div>
+          <ul>
+            <li>每开新一轮，按 G =（可用现金 − S）÷ 3 重算，利润滚进下一轮。</li>
+            <li>G &lt; $50 的币不纳入；S &lt; $25 时不挂插针单，并入 G。</li>
+            <li>未成交买单 + 持仓成本 + 未挂出的后续代预算 ≤ B。不跨币借钱。</li>
+            <li>所有币的 B 加起来，不超过"全部变成币之后再跌 50% 也拿得住"的金额。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>币池 <span class="tag">槽位固定，币种竞争</span></h3>
+          <ul>
+            <li>核心：HYPE、TAO、LINK、AAVE。卫星：NEAR、ZRO、PENDLE、RENDER。</li>
+            <li>卫星和核心同一套规则，只是 G 小（≥ $50），不额外输血。</li>
+            <li>每年复核一次，只看基本面、Token 价值捕获、流动性、上市时长。不按涨幅、修复能力、循环次数换币。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>买入</h3>
+          <ul>
+            <li>三张等额买单，每张 G/3，挂在锚点 A 的 <b>0.93 / 0.83 / 0.71</b> 倍。</li>
+            <li>第一张成交前：日收盘价 ≥ 1.20A，以该收盘价为新锚点，撤单重挂。</li>
+            <li>第一张成交后：A 冻结，不下移。每次成交后重算本轮合并成本 C，重挂卖单。</li>
+            <li>不加执行缓冲，不追价。差一点没成交属于正常结果。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>卖出</h3>
+          <ul>
+            <li>TP = <b>1.25C</b>，卖出本轮持仓的 <b>90%</b>。</li>
+            <li>剩下 10% 成为尾仓：卖出的 90% 已收回 1.125 倍成本，所以尾仓是零成本的纯利润。</li>
+            <li>尾仓立即挂 <b>5 × C_lot</b> 的限价卖单，永不撤单；交易所拒单时，改为收盘价 ≥ 5 × C_lot 就卖。</li>
+            <li>TP 成交后：撤掉本轮未成交买单，以 TP 成交价为新锚点，重算 G，挂三张新买单和插针单。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>深跌：最多 3 代</h3>
+          <ul>
+            <li>本代第三张成交且不足 3 代：下一代锚点 = 第三张成交价 × 0.60，再挂三张。</li>
+            <li>第 3 代的第三张成交后，不再挂买单，只等 TP。</li>
+            <li>进入第 2、3 代时人工复核：基本面、系统性风险、可用现金、其他核心币仓位、是否仍值得长期持有。是检查，不是开关。</li>
+          </ul>
+          <div class="ladder" role="img" aria-label="各代买单位置与 AAVE、LINK、TAO 一年内跌到该位置的历史频率">
+            <div class="lad-gen">第 1 代 · 常见</div>
+            <div class="lad-row"><span class="lvl">−7%</span><span class="bar"><span class="intr" style="width:96%"></span><span class="close" style="width:92%"></span></span><span class="pct">收盘 92% · 盘中 96%</span></div>
+            <div class="lad-row"><span class="lvl">−17%</span><span class="bar"><span class="intr" style="width:91%"></span><span class="close" style="width:83%"></span></span><span class="pct">收盘 83% · 盘中 91%</span></div>
+            <div class="lad-row"><span class="lvl">−29%</span><span class="bar"><span class="intr" style="width:81%"></span><span class="close" style="width:71%"></span></span><span class="pct">收盘 71% · 盘中 81%</span></div>
+            <div class="lad-gen">第 2 代 · 明显熊市</div>
+            <div class="lad-row"><span class="lvl">−60%</span><span class="bar"><span class="intr" style="width:43%"></span><span class="close" style="width:29%"></span></span><span class="pct">收盘 29% · 盘中 43%</span></div>
+            <div class="lad-row"><span class="lvl">−65%</span><span class="bar"><span class="intr" style="width:35%"></span><span class="close" style="width:23%"></span></span><span class="pct">收盘 23% · 盘中 35%</span></div>
+            <div class="lad-row"><span class="lvl">−70%</span><span class="bar"><span class="intr" style="width:25%"></span><span class="close" style="width:13%"></span></span><span class="pct">收盘 13% · 盘中 25%</span></div>
+            <div class="lad-gen">第 3 代 · 深度熊市</div>
+            <div class="lad-row"><span class="lvl">−83%</span><span class="bar"><span class="intr" style="width:8%"></span><span class="close" style="width:2%"></span></span><span class="pct">收盘 2% · 盘中 8%</span></div>
+            <div class="lad-row"><span class="lvl">−85%</span><span class="bar"><span class="intr" style="width:7%"></span><span class="close" style="width:1%"></span></span><span class="pct">收盘 1% · 盘中 7%</span></div>
+            <div class="lad-row"><span class="lvl">−87%</span><span class="bar"><span class="intr" style="width:6%"></span><span class="close" style="width:0%"></span></span><span class="pct">收盘 0% · 盘中 6%</span></div>
+          </div>
+          <div class="legend"><span><i></i>一年内收盘跌到</span><span><i class="l"></i>含盘中插针</span><span>AAVE、LINK、TAO 历史频率，不是预测</span></div>
+        </div>
+        <div class="rule">
+          <h3>插针单</h3>
+          <ul>
+            <li>金额 S，挂在 A × 0.40（−60%）。成交后按成交价 × 1.40 挂卖单，全部卖出，再在当时的 A × 0.40 重挂。</li>
+            <li>不并入 C，不留尾仓。不要加大。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>暂停 <span class="tag">人工 · 最高优先级</span></h3>
+          <ul>
+            <li>触发：严重漏洞、协议失效、代币经济恶化或异常解锁、流动性枯竭、监管致命、下架公告。</li>
+            <li>暂停时：撤掉全部未成交买单（含插针单），停止越跌越买；尾仓卖单保留；重新研究后再决定持有、恢复还是退出。</li>
+            <li>价格本身不触发暂停。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>每日流程</h3>
+<pre class="flow"><span class="c">FOR 每个币:</span>
+    同步成交
+    <span class="b">买单成交</span> → 更新 C，重挂 TP = 1.25C（卖 90%）
+               若是本代第三张且不足 3 代 → 挂下一代（锚点 = 成交价 × 0.60）
+    <span class="s">TP 成交</span>   → 10% 转为尾仓，立即挂 5 × C_lot
+               撤本轮未成交买单 → 以 TP 价为新锚，重算 G，挂三张和插针单
+    插针单成交 → 挂 ×1.40 卖单
+    日收盘：本轮无成交且收盘价 ≥ 1.2A → 上调 A，重挂
+<span class="c">最后：核对每个币占用 ≤ B，以及总额上限</span>
+<span class="c">没有任何触发 → "今天无需操作"</span></pre>
+      <p class="small muted">冲突优先级：基本面 / 暂停 → 预算上限 → 同步成交 → 更新 C 和卖单 → TP 后开新一轮 → 挂下一代 → 上调锚点。程序的"撤销全部挂单"不得撤尾仓卖单。机器负责挂单、对账、计算、记录；人负责币池、基本面、深代复核和改参数。</p>
+    </section>
+
+    <section id="data" aria-labelledby="h-data">
+      <h2 id="h-data"><span class="num">五</span>数据与理由</h2>
+      <p class="muted small">全部来自你的 9 个币，1h 数据，按挂单价保守成交，另有说明的除外。</p>
+
+      <h3>三方案对比 · 3 年窗口（197 个）</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>指标</th><th class="n">你的 V2</th><th class="n">V3.1</th><th class="n">V3.2</th><th class="n">买入持有</th></tr></thead>
+        <tbody>
+          <tr><td>期末收益中位（按预算）</td><td class="n">+24%</td><td class="n">+75%</td><td class="n">+71%</td><td class="n">+23%</td></tr>
+          <tr><td>期末收益中位（按投入本金）</td><td class="n">+37%</td><td class="n">+133%</td><td class="n">+116%</td><td class="n">+23%</td></tr>
+          <tr><td>中位最大回撤</td><td class="n">63%</td><td class="n">47%</td><td class="n">46%</td><td class="n">87%</td></tr>
+          <tr><td>随机一天卖出，赚钱概率</td><td class="n">69%</td><td class="n">78%</td><td class="n">79%</td><td class="n">57%</td></tr>
+          <tr><td>期末胜过 V2 的窗口</td><td class="n">—</td><td class="n">83%</td><td class="n">85%</td><td class="n">48%</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">全历史按投入本金算，9 个币里 8 个是 V3 胜过 V2，例外是 HYPE。</p>
+
+      <h3>收割 vs 持有 · 随机一天卖出</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>窗口</th><th class="n">赚钱概率</th><th class="n">赚时平均</th><th class="n">亏时平均</th><th class="n">平均 log 收益</th></tr></thead>
+        <tbody>
+          <tr><td>1.5 年<span class="sub">V3.2 / 持有</span></td><td class="n">72% / 50%</td><td class="n">+33% / +106%</td><td class="n">−7% / −28%</td><td class="n">0.16 / 0.06</td></tr>
+          <tr><td>3 年<span class="sub">V3.2 / 持有</span></td><td class="n">79% / 57%</td><td class="n">+72% / +210%</td><td class="n">−9% / −30%</td><td class="n">0.33 / 0.21</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">分界线（来自普通币池，只作参考）：币在持有期内年化涨幅低于约 15% 时收割大概率赢；高于约 25–30% 时持有赢，但要卖在高位才能兑现。</p>
+
+      <div class="cols2">
+        <div style="min-width:0">
+          <h3>TP：在平台上选最小遗憾</h3>
+          <div class="tablewrap"><table>
+            <thead><tr><th>TP</th><th class="n">循环/年</th><th class="n">最多落后最好</th></tr></thead>
+            <tbody>
+              <tr><td>1.20</td><td class="n">5.8</td><td class="n">0.053</td></tr>
+              <tr class="pick"><td>1.25（采用）</td><td class="n">4.4</td><td class="n">0.006</td></tr>
+              <tr><td>1.30</td><td class="n">3.5</td><td class="n">0.080</td></tr>
+              <tr><td>1.35</td><td class="n">2.9</td><td class="n">0.083</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted">四段行情：1.5 年、3 年窗口各按 2022 年前后分开。TP 越低循环越多、每次赚得越少，两者基本抵消。</p>
+        </div>
+        <div style="min-width:0">
+          <h3>尾仓到价概率 · 2022 年后的批次</h3>
+          <div class="tablewrap"><table>
+            <thead><tr><th>目标</th><th class="n">1 年内</th><th class="n">2 年内</th></tr></thead>
+            <tbody>
+              <tr><td>2 倍</td><td class="n">50%</td><td class="n">71%</td></tr>
+              <tr><td>3 倍</td><td class="n">26%</td><td class="n">44%</td></tr>
+              <tr class="pick"><td>5 倍（采用）</td><td class="n">14%</td><td class="n">27%</td></tr>
+            </tbody>
+          </table></div>
+          <p class="small muted">5 倍很难，所以尾仓只放 10%，而且是零成本的。</p>
+        </div>
+      </div>
+
+      <h3>尾仓方案</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>方案</th><th class="n">1.5 年 log</th><th class="n">3 年 log</th><th class="n">全历史 log</th><th class="n">尾仓卖出/年</th><th>零成本</th></tr></thead>
+        <tbody>
+          <tr class="pick"><td>10% 挂 5 倍（采用）</td><td class="n">0.282</td><td class="n">0.624</td><td class="n">1.557</td><td class="n">0.9</td><td>是</td></tr>
+          <tr><td>5% 挂 2 倍 + 5% 挂 5 倍</td><td class="n">0.284</td><td class="n">0.637</td><td class="n">1.547</td><td class="n">3.9</td><td>是</td></tr>
+          <tr><td>25% 挂 2 倍（V3.1）</td><td class="n">0.283</td><td class="n">0.638</td><td class="n">1.523</td><td class="n">3.0</td><td>否</td></tr>
+          <tr><td>不留尾仓</td><td class="n">0.281</td><td class="n">0.646</td><td class="n">1.520</td><td class="n">0</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">按复利算打平，所以选操作最少、零成本的那个。</p>
+
+      <h3>买入三档</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>三档</th><th class="n">1.5 年 log</th><th class="n">3 年 log</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>统一 −7 / −17 / −35</td><td class="n">0.165</td><td class="n">0.494</td><td>旧值</td></tr>
+          <tr class="pick"><td>统一 −7 / −17 / −29（采用）</td><td class="n">0.178</td><td class="n">0.507</td><td>更易成交，回撤略高 1–3 个百分点</td></tr>
+          <tr><td>逐币，按过去一年重算</td><td class="n">0.186</td><td class="n">0.482</td><td>和统一差不多</td></tr>
+          <tr><td>V2 逐币（手设）</td><td class="n">0.197</td><td class="n">0.551</td><td>看着同一段历史定的，偏乐观</td></tr>
+        </tbody>
+      </table></div>
+      <p class="small muted">每个币的跌幅特征前后不稳定（前后半段排名相关只有 0.12–0.40），所以保持统一。</p>
+
+      <h3>其他</h3>
+      <ul>
+        <li>插针单：每币每年成交约 1–1.35 次；相对把钱放进主阶梯，平均每年约多 0.3% 的预算，收益集中在少数暴跌日。</li>
+        <li>手续费：一买一卖约 0.2%，约占一次循环毛利的 1%，不是决策变量。</li>
+        <li>闲置现金：约 27% 的预算既没挂单也没持仓。放活期理财按年化 2–4% 算，约每年多 0.5–1.1%。可选，未写进规则，有交易所对手方风险。</li>
+      </ul>
+    </section>
+
+    <section id="checks" aria-labelledby="h-checks">
+      <h2 id="h-checks"><span class="num">六</span>执行中检验：预先登记的预期区间</h2>
+      <p>先把回测给出的预期写下来，实盘数据出来后逐条对照。落在区间外只说明要查原因，不等于要改规则。</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>编号</th><th>检验什么</th><th>回测预期（参考）</th><th>何时看</th><th>落在区间外</th></tr></thead>
+        <tbody>
+          <tr><td class="n">H1</td><td>每币每年 TP 次数</td><td>约 4–5 次（半年约 2 次）</td><td>半年、年度</td><td>先看行情；不作为换币依据</td></tr>
+          <tr><td class="n">H2</td><td>第一代三档一年内成交率</td><td>约 96% / 91% / 81%</td><td>年度</td><td>连续两年明显偏低，再考虑调档</td></tr>
+          <tr><td class="n">H3</td><td>第 2 代第一张成交的频率</td><td>每币每年约 29–43%</td><td>年度</td><td>明显偏高时，先查基本面和系统性风险</td></tr>
+          <tr><td class="n">H4</td><td>尾仓 5 倍到价</td><td>1 年内约 14%，2 年内约 27%</td><td>年度</td><td>长期为 0 不代表错误</td></tr>
+          <tr><td class="n">H5</td><td>插针单</td><td>每币每年约 1 次；一年后仍卖不掉 &lt; 35%</td><td>半年</td><td>超过 35% 就缩小插针单</td></tr>
+          <tr><td class="n">H6</td><td>子账户最大回撤</td><td>中位约 32–46%</td><td>季度</td><td>核心币浮亏超过 50%：复核基本面，不自动卖</td></tr>
+          <tr><td class="n">H7</td><td>手续费占利润</td><td>约 1%（估算）</td><td>半年</td><td>超过 5%，检查是否操作过多</td></tr>
+          <tr><td class="n">H8</td><td>人工偏离规则的价值</td><td>未知</td><td>季度</td><td>用影子账户对比</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="schedule" aria-labelledby="h-sched">
+      <h2 id="h-sched"><span class="num">七</span>复盘时间点</h2>
+      <ul class="timeline">
+        <li><span class="when">每天 · 机器</span><span class="what">同步成交、挂撤单、记录；没有触发就"今天无需操作"。不改规则。</span></li>
+        <li><span class="when">每周日 · 首次 2026-10-18</span><span class="what">10 分钟：成交日志、拒单，尾仓卖单和插针单是否都在，记录人工偏离。不改规则。</span></li>
+        <li><span class="when">每月 1 日 · 首次 2026-11-01（周日）</span><span class="what">30 分钟：资金占用；问一遍"全部成交还愿意持有吗"；各币循环数、深代触发。不改规则。</span></li>
+        <li><span class="when">季度 · 2027-01-13（周三）、2027-07-13（周二）</span><span class="what">对照预期区间 H1–H8，影子账户对比；只修执行流程，不改参数。</span></li>
+        <li class="can"><span class="when">半年 · 2027-04-13（周二）</span><span class="what">第一次允许改参数，必须过改规则门槛，一次只改一处。</span></li>
+        <li class="can"><span class="when">年度 · 2027-10-13（周三），以后每年 10-13</span><span class="what">币池槽位复核；把新一年的数据当真正的样本外重跑回测；版本复盘。</span></li>
+      </ul>
+      <p class="small muted">实心圆点：可以改规则。事件触发（当天或次日复盘，不改规则）：任一币进入第 2 或第 3 代；出现暂停事件；同一天 3 个以上的币插针单成交；交易所停提或拒单；核心币子账户浮亏超过 50%；任何一次偏离规则的人工操作（每次写原因）。</p>
+    </section>
+
+    <section id="evolve" aria-labelledby="h-evolve">
+      <h2 id="h-evolve"><span class="num">八</span>自进化机制</h2>
+      <div class="loop" aria-label="自进化循环">
+        <span class="step">记录</span><span class="arr">→</span>
+        <span class="step">影子账户对比</span><span class="arr">→</span>
+        <span class="step">对照预期区间</span><span class="arr">→</span>
+        <span class="step">复盘归因</span><span class="arr">→</span>
+        <span class="step">过门槛才改</span><span class="arr">→</span>
+        <span class="step">版本日志</span><span class="arr">↺</span>
+      </div>
+
+      <div class="cols2">
+        <div class="rule">
+          <h3>记录</h3>
+          <ul>
+            <li>原有交易记录字段全部保留。</li>
+            <li>新增：每笔买单的代和档位；每个尾仓批次的 C_lot，以及 5 倍卖单是否挂上；插针单的成交和卖出。</li>
+            <li>人工偏离：做了什么、为什么、规则本来会怎么做。</li>
+            <li>只记录不交易的标签：市场结构 HH/HL/LH/LL、波动率状态、BTC 相对 100 日和 200 日均线的位置。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>影子账户</h3>
+          <ul>
+            <li>用仓库里的回测引擎，按真实价格机械执行 V3.3，得到"规则版"结果。</li>
+            <li>和真实账户对比，差额就是人工判断（等企稳再买、基本面判断）的价值。</li>
+            <li>季度看一次，年度下结论：人工偏离连续一年不如规则，就少偏离；反过来，就把有效的偏离写成规则候选。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>改规则的门槛（全部满足才改）</h3>
+      <ol class="gate">
+        <li>满足其一：收益明显提高，风险和复杂度不变；风险明显下降，收益不变；复杂度明显下降；解决重要的尾部风险，且没有副作用。</li>
+        <li>证据足够：至少 6 个月实盘，加上回测在新数据上同方向；或者跨两段不同的行情。单次事件、单个币不改。</li>
+        <li>一次只改一处。改前写下预期效果、观察指标、回滚条件。</li>
+        <li>决定后等一周再执行，防止冲动。</li>
+        <li>版本号加 0.1，写进版本日志。改后 6 个月指标若低于旧版的预期区间，就回滚。</li>
+      </ol>
+
+      <h3>复盘模板</h3>
+      <ol class="gate">
+        <li>事实：本期数据，只写数字。</li>
+        <li>对照：H1–H8 每一项，落在区间内还是区间外。</li>
+        <li>归因：行情、规则，还是执行？看决策质量，不看结果好坏。</li>
+        <li>偏差自检：是不是被最近一次大涨大跌带着走？样本够不够？只找了支持自己的证据吗？有没有拿最坏情况当结论？</li>
+        <li>决定：不动 / 记录观察 / 列入下次复盘 / 改规则（必须过门槛）。</li>
+        <li>写入：复盘记录和版本日志。</li>
+      </ol>
+    </section>
+
+    <section id="rejected" aria-labelledby="h-rej">
+      <h2 id="h-rej"><span class="num">九</span>已测试并否决</h2>
+      <ul class="reject">
+        <li>永久尾仓：25% 和 10% 都在 3 年以上的窗口里更差。</li>
+        <li>尾仓超过 20%：TP 后不再是零成本，回撤更大。</li>
+        <li>TP2，以及逐币止盈。</li>
+        <li>40/35/25 的仓位比例：和三等分没有差别。</li>
+        <li>深代加码（金字塔）、深代减半、深代等反弹再挂。</li>
+        <li>每代固定美元、最多 6 代、单币上限 $1,700：代数多了收益不增，最差 10% 从 −0.32 变成 −0.46。</li>
+        <li>时间止损、纯价格的"慢性死亡"规则。</li>
+        <li>"每年少于 2 轮就换币"、按修复能力或近期涨幅换币：对未来没有预测力。</li>
+        <li>任何牛熊判断（BTC 均线、四年周期），无论用于买入还是尾仓。</li>
+        <li>加大插针单：收益几乎全部来自 2025 年的两次暴跌。</li>
+        <li>买单加执行缓冲、事后追价。</li>
+        <li>整套 V2 卫星规则：改为和核心同一套规则。</li>
+      </ul>
+    </section>
+
+    <section id="open" aria-labelledby="h-open">
+      <h2 id="h-open"><span class="num">十</span>未决事项与局限</h2>
+      <div class="cols2">
+        <div class="rule">
+          <h3>未决</h3>
+          <ul>
+            <li>UNI 换 ZRO：修复能力指标不支持换。同一窗口 UNI +117%、ZRO +72%（V3.1），但只有一个窗口，不显著。按基本面人工决定。</li>
+            <li>美股资金转入：作为 USDT 待用资金，只用于核心币的第 2、3 代和插针单；分两个交易所存放；上限是"亏 70% 也不改变生活"的金额；本金到约 10 万美元时，再逐步转回美股。</li>
+            <li>市场结构标签：先只记录，年度复盘时检验，再决定是否进规则。</li>
+          </ul>
+        </div>
+        <div class="rule">
+          <h3>局限</h3>
+          <ul>
+            <li>你的币历史 1.9–7.7 年，基本只有一轮完整周期，5–10 年的表现没有证据。</li>
+            <li>窗口大量重叠，统计力弱；各方案之间的差距大多在噪声里。</li>
+            <li>灵活执行回测模拟不了，要靠影子账户检验。</li>
+            <li>已撤回："BTC、ETH 长期持有远胜本策略"；"逐币参数没有价值"（只在普通币池成立）；5–7 年窗口的显著性检验。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="versions" aria-labelledby="h-ver">
+      <h2 id="h-ver"><span class="num">十一</span>版本日志</h2>
+      <ul class="version">
+        <li><span class="vn">V2.0 → V3.0</span><span>三档统一、等额；去掉 TP2；尾仓 25% 挂 2 倍；最多 3 代；卫星和核心同一套规则。</span></li>
+        <li><span class="vn">V3.0 → V3.1</span><span>下一代锚点 = 第三张成交价 × 0.60（间隔 40%）。</span></li>
+        <li><span class="vn">V3.1 → V3.2</span><span>TP 卖 90%；尾仓 10% 挂 5 倍，零成本；卫星 G ≥ $50；S &lt; $25 不挂插针单。</span></li>
+        <li><span class="vn">V3.2 → V3.3</span><span>2026-10-13：第三档 −35% → −29%；尾仓、TP 不动；不判断牛熊。</span></li>
+      </ul>
+    </section>
+
+    <footer>
+      完整规则：仓库 <code>research/STRATEGY_V3.md</code>；研究报告：<code>research/REPORT_V3.md</code> 第 14 节。数字是历史回测结果，不是预测。
+    </footer>
+  </main>
+</div>
+</body>
+</html>

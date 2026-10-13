@@ -5,3 +5,6 @@ __pycache__/
 *.egg-info/
 .venv/
 state/
+research/results/*.csv
+research/**/__pycache__/
+research/results/*.pkl
