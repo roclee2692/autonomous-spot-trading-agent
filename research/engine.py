@@ -93,6 +93,8 @@ class CoreParams:
     gen_anchor: str = "b3"               # next-gen anchor: "b3" fill price or "cost" (cycle C)
     stale_days: int | None = None        # cycle open & underwater this long -> drop deeper gens
     fixed_g: float | None = None         # fixed gen size (share of the initial budget) instead of cash/units
+    fill_at_limit: bool = False          # conservative: limits fill at the limit even if the bar opened through it
+    tail_intraday: bool = False          # ("target", x) tail = resting limit sell at (1+x)C_lot from the next bar
 
 
 @dataclass
@@ -212,7 +214,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
             for b in s.buys:
                 price, usd, gen, last = b
                 if li <= price * (1 - pen):
-                    fill = min(price, oi)
+                    fill = price if p.fill_at_limit else min(price, oi)
                     usd = min(usd, s.cash)
                     if usd <= 1e-12:
                         continue
@@ -253,7 +255,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                 tp1 = C * (1 + p.tp1)
                 if hi < tp1 * (1 + pen):
                     continue
-                fill = max(tp1, oi)
+                fill = tp1 if p.fill_at_limit else max(tp1, oi)
                 q1 = q * p.tp1_frac
                 q2 = q * p.tp2_frac
                 qt = max(q - q1 - q2, 0.0)
@@ -292,7 +294,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
             for lot in s.tp2_lots:
                 price, qty, cost = lot
                 if hi >= price * (1 + pen):
-                    fill = max(price, oi)
+                    fill = price if p.fill_at_limit else max(price, oi)
                     s.cash += qty * fill * (1 - fee)
                     fees_paid += qty * fill * fee
                     n_sells += 1
@@ -302,9 +304,24 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                 else:
                     keep.append(lot)
             s.tp2_lots = keep
+        # ---- 3b. tail lots as resting limit sells (intrabar), when enabled
+        if p.tail_intraday and s.tail and p.tail_exit[0] == "target":
+            keep = []
+            for lot in s.tail:
+                tgt = lot.cost / lot.qty * (1 + p.tail_exit[1])
+                if i > lot.t0 and hi >= tgt * (1 + pen):
+                    fill = tgt if p.fill_at_limit else max(tgt, oi)
+                    s.cash += lot.qty * fill * (1 - fee)
+                    fees_paid += lot.qty * fill * fee
+                    tail_realized += lot.qty * fill * (1 - fee) - lot.cost
+                    n_sells += 1
+                    events.append((i, "tail_limit", fill))
+                else:
+                    keep.append(lot)
+            s.tail = keep
         # ---- 4. spike order (independent, never joins C)
         if spike_order is not None and li <= spike_order * (1 - pen) and spike_cash > 1e-12:
-            fill = min(spike_order, oi)
+            fill = spike_order if p.fill_at_limit else min(spike_order, oi)
             qty = spike_cash * (1 - fee) / fill
             fees_paid += spike_cash * fee
             s.spike_pos.append([fill * (1 + p.spike_tp), qty, spike_cash, i])
@@ -318,7 +335,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
             for sp in s.spike_pos:
                 price, qty, cost, t0 = sp
                 if i > t0 and hi >= price * (1 + pen):
-                    fill = max(price, oi)
+                    fill = price if p.fill_at_limit else max(price, oi)
                     spike_cash += qty * fill * (1 - fee)
                     fees_paid += qty * fill * fee
                     n_sells += 1
@@ -350,7 +367,7 @@ def run_core(bars: Bars, p: CoreParams, ctx: dict | None = None) -> dict:
                 s.buys = []          # PAUSED: cancel unfilled buys
                 if s.cyc_qty == 0:
                     waiting = "halt"
-            if s.tail and p.tail_exit[0] != "none":
+            if s.tail and p.tail_exit[0] != "none" and not (p.tail_intraday and p.tail_exit[0] == "target"):
                 keep = []
                 bear = day in bear_days
                 for lot in s.tail:

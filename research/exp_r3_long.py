@@ -10,6 +10,7 @@ used (ret_P, shadow buy-and-hold, IRR) - see principal.py.
 import sys
 from concurrent.futures import ProcessPoolExecutor
 
+import os
 import numpy as np
 import pandas as pd
 
@@ -61,6 +62,14 @@ for _share in (0.10, 0.15, 0.20, 0.25):
 GRID2["s0"] = lambda s: V31P(tp1_frac=1.0)
 SETS = {"main": STRATS, "tail": TAILS, "grid2": GRID2}
 MAJORS = ["BTC", "ETH"]
+# R3_CONSERVATIVE=1: limits fill at the limit price (never at a better open) and
+# tail targets are resting intraday limits, i.e. what a live order would get.
+CONS = os.environ.get("R3_CONSERVATIVE") == "1"
+SUFFIX = "_cons" if CONS else ""
+
+
+def conservative(p):
+    return E.with_(p, fill_at_limit=True, tail_intraday=True) if CONS else p
 
 
 def end_day():
@@ -85,7 +94,7 @@ def job(args):
         return []
     out = []
     for name, mk in strats.items():
-        r = E.run_bh(b) if mk is None else E.run_core(b, mk(sym))
+        r = E.run_bh(b) if mk is None else E.run_core(b, conservative(mk(sym)))
         st = PR.principal_stats(r, b)
         eq = r["equity"]
         yrs = len(eq) / 365
@@ -98,7 +107,7 @@ def job(args):
     return out
 
 
-def run_jobs(jobs, workers=4):
+def run_jobs(jobs, workers=3):
     with ProcessPoolExecutor(workers) as ex:
         return pd.DataFrame([x for p in ex.map(job, jobs, chunksize=2) for x in p])
 
@@ -158,7 +167,7 @@ if __name__ == "__main__":
     if part == "cohort":
         jobs = cohort_jobs(["2018-07-01", "2019-01-01", "2019-07-01", "2020-01-01", "2020-07-01", "2021-01-01"])
         df = run_jobs(jobs)
-        df.to_pickle("results/r3_cohort.pkl")
+        df.to_pickle(f"results/r3_cohort{SUFFIX}.pkl")
     elif part.startswith("tail"):
         for H, step in [(540, 60), (1095, 90), (1825, 90), (2555, 90)]:
             df = run_jobs(window_jobs(H, step, "2019-01-01" if H < 1825 else "2018-07-01", "tail"))
@@ -169,11 +178,11 @@ if __name__ == "__main__":
     elif part == "grid2":
         for H, step in [(540, 60), (1095, 90), (1825, 90), (2555, 90)]:
             df = run_jobs(window_jobs(H, step, "2019-01-01" if H < 1825 else "2018-07-01", "grid2"))
-            df.drop(columns=["eq"]).to_pickle(f"results/r3_g2_{H}.pkl")
+            df.drop(columns=["eq"]).to_pickle(f"results/r3_g2_{H}{SUFFIX}.pkl")
             bk = df[~df.sym.isin(MAJORS)].groupby(["d0", "strat"]).apply(basket, include_groups=False).reset_index()
-            bk.to_pickle(f"results/r3_g2bk_{H}.pkl")
+            bk.to_pickle(f"results/r3_g2bk_{H}{SUFFIX}.pkl")
             print(H, len(df), flush=True)
     elif part.startswith("H"):
         H = int(part[1:])
         df = run_jobs(window_jobs(H))
-        df.to_pickle(f"results/r3_win_{H}.pkl")
+        df.to_pickle(f"results/r3_win_{H}{SUFFIX}.pkl")

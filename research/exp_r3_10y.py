@@ -12,12 +12,13 @@ import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
 
+import os
 import numpy as np
 import pandas as pd
 
 import engine as E
 import principal as PR
-from exp_r3_long import STRATS
+from exp_r3_long import STRATS, SUFFIX, conservative
 
 LONG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "long")
 DAY = E.DAY_MS
@@ -56,7 +57,7 @@ def job(args):
         return []
     out = []
     for s, mk in STRATS.items():
-        r = E.run_bh(b) if mk is None else E.run_core(b, mk(name))
+        r = E.run_bh(b) if mk is None else E.run_core(b, conservative(mk(name)))
         st = PR.principal_stats(r, b)
         eq = r["equity"]
         yrs = len(eq) / 365
@@ -94,5 +95,5 @@ if __name__ == "__main__":
             jobs.append(("cohort2017-10", name, c0, end, True))
     with ProcessPoolExecutor(2) as ex:
         rows = [x for p in ex.map(job, jobs, chunksize=1) for x in p]
-    pd.DataFrame(rows).to_pickle("results/r3_10y.pkl")
+    pd.DataFrame(rows).to_pickle(f"results/r3_10y{SUFFIX}.pkl")
     print(len(rows))
